@@ -7,12 +7,6 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
     setMinimumSize(400,400);
     resize(400,400);
     setWindowTitle("Sender");
-    drawingArea = new ScribbleArea(this);
+    drawingArea = new Whiteboard(this);
     setCentralWidget(drawingArea);
-}
-
-void Sender::mouseReleaseEvent(QMouseEvent * event)
-{
-    // get click position
-    qDebug() << "Sender window clicked: Mouse x " << event->x() << " Mouse y " << event->y();
 }

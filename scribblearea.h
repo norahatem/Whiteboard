@@ -24,9 +24,9 @@ public:
     void setPenWidth(double newPenWidth);
 
     // getter methods
-    bool getIsModified() const{return isModified;}
-    QColor getPenColor() const {return penColor;}
-    double getPenWidth() const {return penWidth;}
+    bool getIsModified() const;
+    QColor getPenColor() const;
+    double getPenWidth() const;
 
 
 public slots:
@@ -35,13 +35,13 @@ public slots:
 protected:
     // override all of those methods
     // mouse handling events to handle the drawing of the board
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     // update the board
-    void paintEvent(QPaintEvent *event) override;
+    void paintEvent(QPaintEvent *event);
     // make sure that the area we are drawing on is the same as our widget!
-    void resizeEvent(QResizeEvent *event) override;
+    void resizeEvent(QResizeEvent *event);
 
 
 private:
@@ -53,7 +53,7 @@ private:
     bool isModified = false;
     // drawing is true while the user is pressing the left mouse button within the scribble area.
     bool drawing = false;
-    double penWidth = 1.5;
+    double penWidth = 1.3;
     QColor penColor = Qt::black;
     QPoint lastPoint;
     QImage image;

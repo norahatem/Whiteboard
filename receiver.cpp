@@ -6,6 +6,9 @@ Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
     setMinimumSize(400,400);
     resize(400,400);
     setWindowTitle("Receiver");
+    QPalette pal = QPalette();
+    pal.setColor(QPalette::Window, QColor("#FFFFFF"));
+    setPalette(pal);
 }
 
 void Receiver::mouseReleaseEvent(QMouseEvent * event)

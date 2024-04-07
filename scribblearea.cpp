@@ -3,11 +3,6 @@
 ScribbleArea::ScribbleArea(QWidget *parent)
     : QWidget(parent)
 {
-    // this setAttribute() indicates that the contents of the widget are rooted to the top left corner
-    // and don't chenge when the widget is resized
-    // This is only an optimization
-    // should only be used for widgets whose contents are static and rooted to the top-left corner.
-
     setAttribute(Qt::WA_StaticContents);
 }
 
@@ -20,11 +15,15 @@ void ScribbleArea::setPenWidth(double newPenWidth){
 }
 
 void ScribbleArea::clear(){
-    // the clear function simply fulls the whole thing with white
-    image.fill(qRgb(255, 255, 255));
+    // the clear function simply fills the whole thing with white
+    image.fill(Qt::white);
     // when you make any changes set isModified to true meaning that there are unsaved modifications
     isModified = true;
     update();
+}
+
+bool ScribbleArea::getIsModified() const{
+    return isModified;
 }
 
 void ScribbleArea::mousePressEvent(QMouseEvent *event){
@@ -43,7 +42,6 @@ void ScribbleArea::mouseMoveEvent(QMouseEvent *event){
         // the draw line function is called if the user moves the mouse while the left button is pressed
         drawLineTo(event->pos());
     }
-
 }
 
 void ScribbleArea::mouseReleaseEvent(QMouseEvent *event){
@@ -73,7 +71,6 @@ void ScribbleArea::resizeEvent(QResizeEvent *event){
         int newHeight = qMax(height() + 128, image.height());
         resizeImage(&image, QSize(newWidth, newHeight));
         update();
-
     }
     QWidget::resizeEvent(event);
     // Initial Image is slightly larger than mainWindow and scriibleArea

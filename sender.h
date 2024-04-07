@@ -5,6 +5,7 @@
 #include <QMainWindow>
 
 #include "scribblearea.h"
+#include "whiteboard.h"
 
 using namespace std;
 
@@ -15,10 +16,13 @@ public:
     Sender(QWidget *parent = 0);
 
 protected:
-    void mouseReleaseEvent(QMouseEvent * event);
+
+
+private slots:
 
 private:
-    ScribbleArea *drawingArea;
+    Whiteboard *drawingArea;
+
 };
 
 #endif // SENDER_H

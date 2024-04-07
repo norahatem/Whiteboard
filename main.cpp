@@ -10,8 +10,8 @@ int main(int argc, char *argv[])
     Sender s;
     Receiver r;
 
-    s.show();
     r.show();
+    s.show();
 
     return app.exec();
 }
