@@ -1,6 +1,6 @@
 #include "receiver.h"
 
-Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
+Receiver::Receiver(QQueue<QPoint> *rPoints, QWidget *parent) : QMainWindow(parent)
 {
     // set form size
     setMinimumSize(400,400);

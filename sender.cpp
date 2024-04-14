@@ -7,6 +7,6 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
     setMinimumSize(400,400);
     resize(400,400);
     setWindowTitle("Sender");
-    drawingArea = new Whiteboard(this);
+    drawingArea = new Whiteboard(&sendPoints, this);
     setCentralWidget(drawingArea);
 }

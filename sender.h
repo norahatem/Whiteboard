@@ -22,6 +22,8 @@ private slots:
 
 private:
     Whiteboard *drawingArea;
+    QQueue<QPoint> sendPoints;
+    QMutex sMutex;
 
 };
 

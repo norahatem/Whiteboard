@@ -18,33 +18,37 @@ class Whiteboard: public QWidget, public QThread
 {
     void run() override {
         while (true) {
-            senderPaint();
-            // QThread::msleep(1);
+            if(!points.empty()){
+                lastPoint = points.dequeue();
+                paint(lastPoint);
+            }
+            // QThread::msleep(100);
         }
     }
 public:
-    explicit Whiteboard(QWidget *parent = nullptr);
+    explicit Whiteboard(QQueue<QPoint> *sendQ, QWidget *parent = nullptr);
+    QMutex qLock;
 
 protected:
     // override these functions to handle drawings
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event)override;
+    void mouseReleaseEvent(QMouseEvent *event)override;
     // paint event
-    void paintEvent(QPaintEvent *event);
-    void resizeEvent(QResizeEvent *event);
+    void paintEvent(QPaintEvent *event)override;
+    void resizeEvent(QResizeEvent *event)override;
 
 private:
     bool drawing;
     QPoint lastPoint, currentPoint;
-    void senderPaint();
+    void paint(QPoint point);
     // off class image to handle drawing
     QPixmap image;
     // QVector<QPoint> points;
     QColor penColor = "Black";
     double penWidth = 3.5;
     QQueue<QPoint> points;
-    QMutex qLock;
+    QQueue<QPoint> *sPoints;
 };
 
 #endif // WHITEBOARD_H

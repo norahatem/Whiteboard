@@ -2,13 +2,14 @@
 #include <QDebug>
 
 
-Whiteboard::Whiteboard(QWidget *parent)
+Whiteboard::Whiteboard(QQueue<QPoint> *sendQ, QWidget *parent)
     : QWidget(parent)
 {
     setAttribute(Qt::WA_StaticContents);
     setMinimumSize(400, 400);
     image = QPixmap(size());
     image.fill(Qt::white);
+    sPoints = sendQ;
     start();
 }
 
@@ -25,20 +26,22 @@ void Whiteboard::mousePressEvent(QMouseEvent *event){
         currentPoint = event->pos();
         // draw a point everytime the mouse is presses
         qLock.lock();
-        points.enqueue(event->pos());
+        points.enqueue(currentPoint);
+        sPoints->enqueue(currentPoint);
         qLock.unlock();
+
         // paint(lastPoint, lastPoint);
         // paint();
     }
 }
 
-void Whiteboard::senderPaint(){
+void Whiteboard::paint(QPoint point){
     qDebug() << currentPoint;
-    if(points.empty())
-        return;
-    qLock.lock();
-    lastPoint = points.dequeue();
-    qLock.unlock();
+    // if(points.empty())
+    //     return;
+    // qLock.lock();
+    // lastPoint = points.dequeue();
+    // qLock.unlock();
     QPainter painter(&image);
     painter.setPen(QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     if(lastPoint == currentPoint)
@@ -55,6 +58,7 @@ void Whiteboard::mouseMoveEvent(QMouseEvent *event){
         lastPoint = event->pos();
         qLock.lock();
         points.enqueue(lastPoint);
+        sPoints->enqueue(lastPoint);
         qLock.unlock();
     }
 }

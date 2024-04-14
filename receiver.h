@@ -3,12 +3,14 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include <QQueue>
+#include <QPoint>
 
 class Receiver: public QMainWindow
 {
     Q_OBJECT
 public:
-    Receiver(QWidget *parent = 0);
+    Receiver(QQueue<QPoint> *rPoints, QWidget *parent = 0);
 
 protected:
     void mouseReleaseEvent(QMouseEvent * event);
