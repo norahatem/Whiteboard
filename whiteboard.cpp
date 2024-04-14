@@ -9,6 +9,7 @@ Whiteboard::Whiteboard(QWidget *parent)
     setMinimumSize(400, 400);
     image = QPixmap(size());
     image.fill(Qt::white);
+    start();
 }
 
 void Whiteboard::paintEvent(QPaintEvent *event){
@@ -21,29 +22,40 @@ void Whiteboard::paintEvent(QPaintEvent *event){
 void Whiteboard::mousePressEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         drawing = true;
-        lastPoint = event->pos();
+        currentPoint = event->pos();
         // draw a point everytime the mouse is presses
-        // points.enqueue(lastPoint);
-        pLine(lastPoint, lastPoint);
-        update();
+        qLock.lock();
+        points.enqueue(event->pos());
+        qLock.unlock();
+        // paint(lastPoint, lastPoint);
+        // paint();
     }
 }
 
-void Whiteboard::paint(QPoint lastPoint, QPoint currentPoint){
+void Whiteboard::senderPaint(){
+    qDebug() << currentPoint;
+    if(points.empty())
+        return;
+    qLock.lock();
+    lastPoint = points.dequeue();
+    qLock.unlock();
     QPainter painter(&image);
     painter.setPen(QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     if(lastPoint == currentPoint)
         painter.drawPoint(lastPoint);
     painter.drawLine(lastPoint, currentPoint);
+    currentPoint = lastPoint;
+    // painter.drawPoint(lastPoint);
     painter.end();
-    qDebug() << lastPoint << " " << currentPoint;
+    update();
 }
 
 void Whiteboard::mouseMoveEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton && drawing){
-        pLine(lastPoint, event->pos());
         lastPoint = event->pos();
-        update();
+        qLock.lock();
+        points.enqueue(lastPoint);
+        qLock.unlock();
     }
 }
 

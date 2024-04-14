@@ -10,9 +10,18 @@
 #include <QColor>
 #include <QPoint>
 #include <QQueue>
+#include <thread>
+#include <QThread>
+#include <QMutex>
 
-class Whiteboard: public QWidget
+class Whiteboard: public QWidget, public QThread
 {
+    void run() override {
+        while (true) {
+            senderPaint();
+            // QThread::msleep(1);
+        }
+    }
 public:
     explicit Whiteboard(QWidget *parent = nullptr);
 
@@ -28,13 +37,14 @@ protected:
 private:
     bool drawing;
     QPoint lastPoint, currentPoint;
-    void paint(QPoint lastPoint, QPoint currentPoint);
+    void senderPaint();
     // off class image to handle drawing
     QPixmap image;
     // QVector<QPoint> points;
     QColor penColor = "Black";
     double penWidth = 3.5;
     QQueue<QPoint> points;
+    QMutex qLock;
 };
 
 #endif // WHITEBOARD_H
