@@ -24,22 +24,16 @@ void Whiteboard::mousePressEvent(QMouseEvent *event){
         lastPoint = event->pos();
         // draw a point everytime the mouse is presses
         // points.enqueue(lastPoint);
-        pPoint(lastPoint);
+        pLine(lastPoint, lastPoint);
         update();
     }
 }
 
-void Whiteboard::pPoint(QPoint pointToDraw){
-    QPainter painter(&image);
-    painter.setPen(QPen(penColor, penWidth));
-    painter.drawPoint(lastPoint);
-    painter.end();
-    qDebug() << pointToDraw;
-}
-
-void Whiteboard::pLine(QPoint lastPoint, QPoint currentPoint){
+void Whiteboard::paint(QPoint lastPoint, QPoint currentPoint){
     QPainter painter(&image);
     painter.setPen(QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    if(lastPoint == currentPoint)
+        painter.drawPoint(lastPoint);
     painter.drawLine(lastPoint, currentPoint);
     painter.end();
     qDebug() << lastPoint << " " << currentPoint;

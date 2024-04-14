@@ -28,8 +28,7 @@ protected:
 private:
     bool drawing;
     QPoint lastPoint, currentPoint;
-    void pPoint(QPoint pointToDraw);
-    void pLine(QPoint lastPoint, QPoint currentPoint);
+    void paint(QPoint lastPoint, QPoint currentPoint);
     // off class image to handle drawing
     QPixmap image;
     // QVector<QPoint> points;
