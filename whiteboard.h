@@ -9,6 +9,7 @@
 
 #include <QColor>
 #include <QPoint>
+#include <QQueue>
 
 class Whiteboard: public QWidget
 {
@@ -26,9 +27,15 @@ protected:
 
 private:
     bool drawing;
-    QPoint lastPoint;
+    QPoint lastPoint, currentPoint;
+    void pPoint(QPoint pointToDraw);
+    void pLine(QPoint lastPoint, QPoint currentPoint);
     // off class image to handle drawing
     QPixmap image;
+    // QVector<QPoint> points;
+    QColor penColor = "Black";
+    double penWidth = 3.5;
+    QQueue<QPoint> points;
 };
 
 #endif // WHITEBOARD_H

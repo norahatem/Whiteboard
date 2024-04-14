@@ -53,7 +53,7 @@ private:
     bool isModified = false;
     // drawing is true while the user is pressing the left mouse button within the scribble area.
     bool drawing = false;
-    double penWidth = 1.3;
+    double penWidth = 2;
     QColor penColor = Qt::black;
     QPoint lastPoint;
     QImage image;
