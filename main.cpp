@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QQueue<QPoint> points;
     Sender s;
-    Receiver r( &points);
+    Receiver r;
 
     r.show();
     s.show();

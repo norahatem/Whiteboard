@@ -10,7 +10,7 @@ class Receiver: public QMainWindow
 {
     Q_OBJECT
 public:
-    Receiver(QQueue<QPoint> *rPoints, QWidget *parent = 0);
+    Receiver(QWidget *parent = 0);
 
 protected:
     void mouseReleaseEvent(QMouseEvent * event);

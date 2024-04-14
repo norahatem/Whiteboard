@@ -21,17 +21,20 @@ void Whiteboard::paintEvent(QPaintEvent *event){
 }
 
 void Whiteboard::mousePressEvent(QMouseEvent *event){
-    if(event->button() == Qt::LeftButton){
-        drawing = true;
-        currentPoint = event->pos();
-        // draw a point everytime the mouse is presses
-        qLock.lock();
-        points.enqueue(currentPoint);
-        sPoints->enqueue(currentPoint);
-        qLock.unlock();
+    // only need to ask here as drawing is set to true only here
+    if(interactive){
+        if(event->button() == Qt::LeftButton){
+            drawing = true;
+            currentPoint = event->pos();
+            // draw a point everytime the mouse is presses
+            qLock.lock();
+            points.enqueue(currentPoint);
+            sPoints->enqueue(currentPoint);
+            qLock.unlock();
 
-        // paint(lastPoint, lastPoint);
-        // paint();
+            // paint(lastPoint, lastPoint);
+            // paint();
+        }
     }
 }
 
@@ -81,4 +84,8 @@ void Whiteboard::resizeEvent(QResizeEvent *event){
     painter.end();
 
     QWidget::resizeEvent(event);
+}
+
+void Whiteboard::setIntercative(bool isInteractive){
+    interactive = isInteractive;
 }

@@ -27,8 +27,8 @@ class Whiteboard: public QWidget, public QThread
     }
 public:
     explicit Whiteboard(QQueue<QPoint> *sendQ, QWidget *parent = nullptr);
+    void setIntercative(bool isInteractive);
     QMutex qLock;
-
 protected:
     // override these functions to handle drawings
     void mousePressEvent(QMouseEvent *event) override;
@@ -49,6 +49,7 @@ private:
     double penWidth = 3.5;
     QQueue<QPoint> points;
     QQueue<QPoint> *sPoints;
+    bool interactive;
 };
 
 #endif // WHITEBOARD_H

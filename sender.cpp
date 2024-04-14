@@ -8,5 +8,6 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
     resize(400,400);
     setWindowTitle("Sender");
     drawingArea = new Whiteboard(&sendPoints, this);
+    drawingArea->setIntercative(true);
     setCentralWidget(drawingArea);
 }
