@@ -19,7 +19,9 @@ class Whiteboard: public QWidget, public QThread
     void run() override {
         while (true) {
             if(!points.empty()){
+                qLock.lock();
                 lastPoint = points.dequeue();
+                qLock.unlock();
                 paint(lastPoint);
             }
             // QThread::msleep(100);

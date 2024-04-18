@@ -9,11 +9,23 @@
 
 using namespace std;
 
-class Sender: public QMainWindow
+class Sender: public QMainWindow, public QThread
 {
-    Q_OBJECT
+    // Q_OBJECT
+    void run() override {
+        while (true) {
+            if(!sendPoints.empty()){
+                drawingArea->qLock.lock();
+                // QPoint point = sendPoints.dequeue();
+                // sendPoints.enqueue(se)
+                // drawingArea->qLock.unlock();
+            }
+            // QThread::msleep(100);
+        }
+
+    }
 public:
-    Sender(QWidget *parent = 0);
+    Sender(QQueue<QPoint> *sendQ, QWidget *parent = 0);
 
 protected:
 
@@ -23,7 +35,7 @@ private slots:
 private:
     Whiteboard *drawingArea;
     QQueue<QPoint> sendPoints;
-    QMutex sMutex;
+    // QMutex sMutex;
 
 };
 

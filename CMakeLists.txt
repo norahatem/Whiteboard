@@ -27,6 +27,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         receiver.h receiver.cpp
         scribblearea.h scribblearea.cpp
         whiteboard.h whiteboard.cpp
+        drawingcmd.h drawingcmd.cpp
+        mainwindow.h mainwindow.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Whiteboard APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

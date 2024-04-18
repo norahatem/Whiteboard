@@ -29,9 +29,8 @@ void Whiteboard::mousePressEvent(QMouseEvent *event){
             // draw a point everytime the mouse is presses
             qLock.lock();
             points.enqueue(currentPoint);
-            sPoints->enqueue(currentPoint);
+            // sPoints->enqueue(currentPoint);
             qLock.unlock();
-
             // paint(lastPoint, lastPoint);
             // paint();
         }
