@@ -21,6 +21,8 @@ class Sender: public QMainWindow, public QThread
                 // drawingArea->qLock.unlock();
             }
             // QThread::msleep(100);
+            qDebug() << "Hi from the sender\n";
+            QThread::sleep(5);
         }
 
     }
@@ -28,7 +30,9 @@ public:
     Sender(QQueue<QPoint> *sendQ, QWidget *parent = 0);
 
 protected:
-
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event)override;
+    void mouseReleaseEvent(QMouseEvent *event)override;
 
 private slots:
 

@@ -11,5 +11,25 @@ Sender::Sender(QQueue<QPoint> *sendQ, QWidget *parent) : QMainWindow(parent)
     drawingArea = new Whiteboard(&sendPoints, this);
     drawingArea->setIntercative(true);
     setCentralWidget(drawingArea);
+    start();
 
+}
+
+void Sender::mousePressEvent(QMouseEvent *event){
+    if(event->button() == Qt::LeftButton){
+        drawingArea->penDown(event->pos());
+    }
+}
+
+void Sender::mouseMoveEvent(QMouseEvent *event){
+    if(event->buttons() & Qt::LeftButton){
+        drawingArea->addPoint(event->pos());
+    }
+}
+
+void Sender::mouseReleaseEvent(QMouseEvent *event){
+
+    if(event->button() == Qt::LeftButton){
+        drawingArea->penUp(event->pos());
+    }
 }

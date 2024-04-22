@@ -20,9 +20,10 @@ class Whiteboard: public QWidget, public QThread
         while (true) {
             if(!points.empty()){
                 qLock.lock();
-                lastPoint = points.dequeue();
+                QPoint point = points.dequeue();
                 qLock.unlock();
-                paint(lastPoint);
+                qDebug() << "Whiteboard: " << point;
+                paint(point);
             }
             // QThread::msleep(100);
         }
@@ -31,18 +32,33 @@ public:
     explicit Whiteboard(QQueue<QPoint> *sendQ, QWidget *parent = nullptr);
     void setIntercative(bool isInteractive);
     QMutex qLock;
+    void setPenColor(QColor newColor);
+    void setPenSize(double newSize);
+
+    // getter methods
+    bool getIsModified() const;
+    QColor getPenColor() const;
+    double getPenWidth() const;
+    void addPoint(QPoint point);
+    void penUp(QPoint point);
+    void penDown(QPoint point);
+
+public slots:
+    void clear();
+
 protected:
     // override these functions to handle drawings
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event)override;
-    void mouseReleaseEvent(QMouseEvent *event)override;
+    // void mousePressEvent(QMouseEvent *event) override;
+    // void mouseMoveEvent(QMouseEvent *event)override;
+    // void mouseReleaseEvent(QMouseEvent *event)override;
     // paint event
     void paintEvent(QPaintEvent *event)override;
     void resizeEvent(QResizeEvent *event)override;
 
 private:
-    bool drawing;
-    QPoint lastPoint, currentPoint;
+    // bool drawing;
+    bool isModified;
+    QPoint lastPoint;
     void paint(QPoint point);
     // off class image to handle drawing
     QPixmap image;

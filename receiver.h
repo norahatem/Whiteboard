@@ -7,14 +7,22 @@
 #include <QPoint>
 #include "whiteboard.h"
 
-class Receiver: public QMainWindow
+class Receiver: public QMainWindow, public QThread
 {
-    Q_OBJECT
+    // Q_OBJECT
+    void run() override{
+        while(true){
+            QThread::sleep(1);
+            QPoint point = QPoint(rand()%400, rand()%400);
+            drawingArea->addPoint(point);
+            qDebug() << "receiver: " << point;
+        }
+    }
 public:
     Receiver(QQueue<QPoint> *receiveQ, QWidget *parent = 0);
 
 protected:
-    void mouseReleaseEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event) override;
 
 private:
     Whiteboard *drawingArea;

@@ -12,6 +12,7 @@ Receiver::Receiver(QQueue<QPoint> *receiveQ, QWidget *parent) : QMainWindow(pare
     drawingArea = new Whiteboard(&receivePoints, this);
     drawingArea->setIntercative(false);
     setCentralWidget(drawingArea);
+    start();
 }
 
 void Receiver::mouseReleaseEvent(QMouseEvent * event)
