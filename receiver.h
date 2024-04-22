@@ -22,7 +22,6 @@ public:
     Receiver(QQueue<QPoint> *receiveQ, QWidget *parent = 0);
 
 protected:
-    void mouseReleaseEvent(QMouseEvent * event) override;
 
 private:
     Whiteboard *drawingArea;

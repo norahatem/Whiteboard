@@ -10,7 +10,6 @@
 #include <QColor>
 #include <QPoint>
 #include <QQueue>
-#include <thread>
 #include <QThread>
 #include <QMutex>
 
@@ -29,8 +28,7 @@ class Whiteboard: public QWidget, public QThread
         }
     }
 public:
-    explicit Whiteboard(QQueue<QPoint> *sendQ, QWidget *parent = nullptr);
-    void setIntercative(bool isInteractive);
+    explicit Whiteboard(QWidget *parent = nullptr);
     QMutex qLock;
     void setPenColor(QColor newColor);
     void setPenSize(double newSize);
@@ -47,10 +45,6 @@ public slots:
     void clear();
 
 protected:
-    // override these functions to handle drawings
-    // void mousePressEvent(QMouseEvent *event) override;
-    // void mouseMoveEvent(QMouseEvent *event)override;
-    // void mouseReleaseEvent(QMouseEvent *event)override;
     // paint event
     void paintEvent(QPaintEvent *event)override;
     void resizeEvent(QResizeEvent *event)override;
@@ -66,8 +60,7 @@ private:
     QColor penColor = "Black";
     double penWidth = 3.5;
     QQueue<QPoint> points;
-    QQueue<QPoint> *sPoints;
-    bool interactive;
+    QPen pen = QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 };
 
 #endif // WHITEBOARD_H

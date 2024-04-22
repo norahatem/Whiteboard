@@ -2,14 +2,13 @@
 #include <QDebug>
 
 
-Whiteboard::Whiteboard(QQueue<QPoint> *sendQ, QWidget *parent)
+Whiteboard::Whiteboard(QWidget *parent)
     : QWidget(parent)
 {
     setAttribute(Qt::WA_StaticContents);
     setMinimumSize(400, 400);
     image = QPixmap(size());
     image.fill(Qt::white);
-    sPoints = sendQ;
     start();
 }
 
@@ -22,10 +21,20 @@ void Whiteboard::setPenSize(double newPenSize){
 }
 
 void Whiteboard::clear(){
-    // clear the whole queue
-    points.clear();
+    image.fill(QColor("white"));
 }
 
+QColor Whiteboard::getPenColor() const{
+    return penColor;
+}
+
+bool Whiteboard::getIsModified() const{
+    return isModified;
+}
+
+double Whiteboard::getPenWidth() const{
+    return penWidth;
+}
 
 void Whiteboard::paintEvent(QPaintEvent *event){
     QPainter painter(this);
@@ -34,48 +43,17 @@ void Whiteboard::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-
-
 void Whiteboard::paint(QPoint point){
-    // qDebug() << currentPoint;
-    // if(points.empty())
-    //     return;
-    // qLock.lock();
-    // lastPoint = points.dequeue();
-    // qLock.unlock();
     QPainter painter(&image);
-    painter.setPen(QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-    if(lastPoint == point){
-
+    painter.setPen(pen);
+    if(lastPoint == point)
         painter.drawPoint(point);
-    }
-    else{
+    else
         painter.drawLine(lastPoint, point);
-    }
-
     lastPoint=point;
-    // painter.drawPoint(lastPoint);
     painter.end();
     update();
 }
-
-// void Whiteboard::mouseMoveEvent(QMouseEvent *event){
-//     if(event->buttons() & Qt::LeftButton && drawing){
-//         lastPoint = event->pos();
-//         qLock.lock();
-//         points.enqueue(lastPoint);
-//         sPoints->enqueue(lastPoint);
-//         qLock.unlock();
-//     }
-// }
-
-// void Whiteboard::mouseReleaseEvent(QMouseEvent *event){
-
-//     if(event->button() == Qt::LeftButton && drawing){
-//         drawing = false;
-//     }
-// }
 
 void Whiteboard::resizeEvent(QResizeEvent *event){
     QPixmap newImage(size());
@@ -90,10 +68,6 @@ void Whiteboard::resizeEvent(QResizeEvent *event){
     QWidget::resizeEvent(event);
 }
 
-void Whiteboard::setIntercative(bool isInteractive){
-    interactive = isInteractive;
-}
-
 void Whiteboard::addPoint(QPoint point){
     qLock.lock();
     points.enqueue(point);
@@ -101,12 +75,10 @@ void Whiteboard::addPoint(QPoint point){
 }
 
 void Whiteboard::penUp(QPoint point){
-    // drawing = false;
     this->addPoint(point);
 }
 
 void Whiteboard::penDown(QPoint point){
-    // drawing = true;
     lastPoint = point;
     this->addPoint(lastPoint);
 }

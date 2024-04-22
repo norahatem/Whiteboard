@@ -8,8 +8,7 @@ Sender::Sender(QQueue<QPoint> *sendQ, QWidget *parent) : QMainWindow(parent)
     resize(400,400);
     setWindowTitle("Sender");
     sendPoints = *sendQ;
-    drawingArea = new Whiteboard(&sendPoints, this);
-    drawingArea->setIntercative(true);
+    drawingArea = new Whiteboard(this);
     setCentralWidget(drawingArea);
     start();
 

@@ -4,7 +4,6 @@
 #include <QList>
 #include <QMainWindow>
 
-#include "scribblearea.h"
 #include "whiteboard.h"
 
 using namespace std;
@@ -14,14 +13,7 @@ class Sender: public QMainWindow, public QThread
     // Q_OBJECT
     void run() override {
         while (true) {
-            if(!sendPoints.empty()){
-                drawingArea->qLock.lock();
-                // QPoint point = sendPoints.dequeue();
-                // sendPoints.enqueue(se)
-                // drawingArea->qLock.unlock();
-            }
-            // QThread::msleep(100);
-            qDebug() << "Hi from the sender\n";
+            qDebug() << "Hi from the sender";
             QThread::sleep(5);
         }
 
@@ -39,7 +31,6 @@ private slots:
 private:
     Whiteboard *drawingArea;
     QQueue<QPoint> sendPoints;
-    // QMutex sMutex;
 
 };
 

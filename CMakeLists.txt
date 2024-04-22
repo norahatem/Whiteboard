@@ -25,7 +25,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         sender.h sender.cpp
         receiver.h receiver.cpp
-        scribblearea.h scribblearea.cpp
+
         whiteboard.h whiteboard.cpp
         drawingcmd.h drawingcmd.cpp
         mainwindow.h mainwindow.cpp
