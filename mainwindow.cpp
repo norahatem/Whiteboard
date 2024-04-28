@@ -14,13 +14,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     send->setStyleSheet(stylesheet);
     receive->setStyleSheet(stylesheet);
 
+    QVBoxLayout *receiverLayout = new QVBoxLayout;
+    receiverLayout->addWidget(receive);
+    receiverLayout->addWidget(receiver);
+
     QVBoxLayout *senderLayout = new QVBoxLayout;
     senderLayout->addWidget(send);
     senderLayout->addWidget(sender);
 
-    QVBoxLayout *receiverLayout = new QVBoxLayout;
-    receiverLayout->addWidget(receive);
-    receiverLayout->addWidget(receiver);
+
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addLayout(senderLayout);

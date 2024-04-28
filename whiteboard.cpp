@@ -9,7 +9,8 @@ Whiteboard::Whiteboard(QWidget *parent)
     setMinimumSize(400, 400);
     image = QPixmap(size());
     image.fill(Qt::white);
-    start();
+    paintThread = std::thread(&Whiteboard::painting, this);
+//    start();
 }
 
 void Whiteboard::setPenColor(QColor newPenColor){

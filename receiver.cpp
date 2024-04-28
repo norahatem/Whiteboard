@@ -9,6 +9,6 @@ Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
     drawingArea = new Whiteboard(this);
     setCentralWidget(drawingArea);
 //    start();
-    receiveThread = std::thread(read);
-    runThread = std::thread(&Receiver::runner, this);
+    receiveThread = std::thread(&Receiver::readData, this);
+//    runThread = std::thread(&Receiver::runner, this);
 }

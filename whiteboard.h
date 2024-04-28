@@ -10,24 +10,15 @@
 #include <QColor>
 #include <QPoint>
 #include <QQueue>
-#include <QThread>
 #include <QMutex>
 #include <QDebug>
 
-class Whiteboard: public QWidget, public QThread
+#include <thread>
+#include <iostream>
+
+class Whiteboard: public QWidget
 {
-    void run() override {
-        while (true) {
-            if(!points.empty()){
-                qLock.lock();
-                QPoint point = points.dequeue();
-                qLock.unlock();
-//                qDebug() << "Whiteboard: " << point;
-                paint(point);
-            }
-            // QThread::msleep(100);
-        }
-    }
+
 public:
     explicit Whiteboard(QWidget *parent = nullptr);
     QMutex qLock;
@@ -62,6 +53,17 @@ private:
     double penWidth = 3.5;
     QQueue<QPoint> points;
     QPen pen = QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    std::thread paintThread;
+    void painting(){
+        while (true) {
+            if(!points.empty()){
+                qLock.lock();
+                QPoint point = points.dequeue();
+                qLock.unlock();
+                paint(point);
+            }
+        }
+    }
 };
 
 #endif // WHITEBOARD_H

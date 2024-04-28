@@ -4,7 +4,6 @@
 Sender::Sender(QWidget *parent) : QMainWindow(parent)
 {
     // set form size
-    using namespace std::literals::chrono_literals;
     setFixedSize(400,400);
 //    resize(400,400);
     setWindowTitle("Sender");
