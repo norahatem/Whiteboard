@@ -14,14 +14,14 @@
 #define T 1ms
 #define TX 15
 #define RX 16
-#define PERIOD 1us
-#define CLK_WAIT 0.5us
+#define PERIOD 100us
+#define CLK_WAIT 10us
 //acknowledge pulse on receive pi. This is an output
 #define ACK_RECEIVE 4
 //acknowledge pulse received on the sender side.
 #define ACK_SEND 5
 //#define ACK_TIME 1us
-#define ACK_WAIT 0.5us
+#define ACK_WAIT 1us
 
 void initRpi();
 

@@ -6,6 +6,7 @@
 #include <QQueue>
 #include <QPoint>
 #include <ctime>
+#include <queue>
 
 #include "whiteboard.h"
 #include "com.h"
@@ -16,7 +17,6 @@ class Receiver: public QMainWindow
 {
     Q_OBJECT
 public:
-//    Receiver(QQueue<QPoint> *receiveQ, QWidget *parent = 0);
     Receiver(QWidget *parent = 0);
 
 protected:
@@ -24,16 +24,10 @@ protected:
 private:
     Whiteboard *drawingArea;
     QQueue<QPoint> receivePoints;
+    std::queue<int> coordinates;
     std::thread receiveThread;
-    std::thread runThread;
-    void readData(){
-        while(true){
-//            std::bitset<9> data;
-            int data = read();
-            qDebug() << "\t\t\tReceived " << data;
-        }
-
-    }
+    void readData();
+    void addPoint(int coordinate);
 };
 
 #endif // RECEIVER_H

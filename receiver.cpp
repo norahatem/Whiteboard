@@ -10,5 +10,27 @@ Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
     setCentralWidget(drawingArea);
 //    start();
     receiveThread = std::thread(&Receiver::readData, this);
-//    runThread = std::thread(&Receiver::runner, this);
+}
+
+void Receiver::readData(){
+    while(true){
+        int data = read();
+        qDebug() << "\t\t\tReceived " << data;
+        addPoint(data);
+    }
+}
+
+void Receiver::addPoint(int coordinate){
+    drawingArea->qLock.lock();
+    coordinates.push(coordinate);
+    drawingArea->qLock.unlock();
+    if (coordinates.size() >= 2){
+        drawingArea->qLock.lock();
+        int tempx = coordinates.front();
+        coordinates.pop();
+        int tempy = coordinates.front();
+        coordinates.pop();
+        drawingArea->qLock.unlock();
+        drawingArea->addPoint(QPoint(tempx, tempy));
+    }
 }
