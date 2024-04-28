@@ -1,13 +1,14 @@
 #include "receiver.h"
 
-Receiver::Receiver(QQueue<QPoint> *receiveQ, QWidget *parent) : QMainWindow(parent)
+Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
 {
     // set form size
-    setMinimumSize(400,400);
-    resize(400,400);
+    setFixedSize(400,400);
+//    resize(400,400);
     setWindowTitle("Receiver");
     drawingArea = new Whiteboard(this);
     setCentralWidget(drawingArea);
-    start();
+//    start();
+    receiveThread = std::thread(read);
+    runThread = std::thread(&Receiver::runner, this);
 }
-

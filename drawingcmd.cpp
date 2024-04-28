@@ -1,3 +1,6 @@
 #include "drawingcmd.h"
 
-DrawingCmd::DrawingCmd() {}
+DrawingCmd::DrawingCmd()
+{
+
+}

@@ -3,8 +3,8 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     QQueue<QPoint> points;
-    sender = new Sender(&points, this);
-    receiver = new Receiver(&points, this);
+    sender = new Sender(this);
+    receiver = new Receiver(this);
 
     QString stylesheet = "QLabel { background-color : none; color : black; font-size: 11pt;}";
     send = new QLabel("Local", this);
@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     layout->addLayout(senderLayout);
     layout->addLayout(receiverLayout);
 
-
+    setFixedSize(850,450);
     QWidget *centralWidget = new QWidget;
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);

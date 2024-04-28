@@ -12,6 +12,7 @@
 #include <QQueue>
 #include <QThread>
 #include <QMutex>
+#include <QDebug>
 
 class Whiteboard: public QWidget, public QThread
 {
@@ -21,7 +22,7 @@ class Whiteboard: public QWidget, public QThread
                 qLock.lock();
                 QPoint point = points.dequeue();
                 qLock.unlock();
-                qDebug() << "Whiteboard: " << point;
+//                qDebug() << "Whiteboard: " << point;
                 paint(point);
             }
             // QThread::msleep(100);
