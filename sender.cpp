@@ -5,7 +5,7 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 {
     setFixedSize(400,400);
     setWindowTitle("Sender");
-    drawingArea = new Whiteboard(this);
+    drawingArea = new Whiteboard("Sender", this);
     setCentralWidget(drawingArea);
     senderThread = std::thread(&Sender::serialize, this);
 }
@@ -13,6 +13,7 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 void Sender::mousePressEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         drawingArea->penDown(event->pos());
+//        cmd.setCmd();
         drawingArea->qLock.lock();
         sendPoints.enqueue(event->pos());
         drawingArea->qLock.unlock();
@@ -44,9 +45,9 @@ void Sender::serialize(){
             drawingArea->qLock.lock();
             QPoint point = sendPoints.dequeue();
             drawingArea->qLock.unlock();
-            qDebug() << "Sending x " << point.x();
+//            qDebug() << "Sending x " << point.x();
             send(point.x());
-            qDebug() << "Sending y " << point.y();
+//            qDebug() << "Sending y " << point.y();
             send(point.y());
         } else
             std::this_thread::sleep_for(100ms);

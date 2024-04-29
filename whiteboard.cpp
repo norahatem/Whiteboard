@@ -2,7 +2,7 @@
 #include <QDebug>
 
 
-Whiteboard::Whiteboard(QWidget *parent)
+Whiteboard::Whiteboard(QString name, QWidget *parent)
     : QWidget(parent)
 {
     setAttribute(Qt::WA_StaticContents);
@@ -10,7 +10,7 @@ Whiteboard::Whiteboard(QWidget *parent)
     image = QPixmap(size());
     image.fill(Qt::white);
     paintThread = std::thread(&Whiteboard::painting, this);
-//    start();
+    boardName = name;
 }
 
 void Whiteboard::setPenColor(QColor newPenColor){
@@ -38,6 +38,25 @@ double Whiteboard::getPenWidth() const{
 }
 
 void Whiteboard::paintEvent(QPaintEvent *event){
+
+    QPainter painter1(&image);
+    while(!points.empty()){
+            qLock.lock();
+            QPoint point = points.dequeue();
+            qLock.unlock();
+            painter1.setPen(pen);
+            if(lastPoint == point)
+                painter1.drawPoint(point);
+            else
+                painter1.drawLine(lastPoint, point);
+            lastPoint=point;
+
+
+        }
+        painter1.end();
+
+
+
     QPainter painter(this);
     QRect redrawRect = event->rect();
     painter.drawPixmap(redrawRect, image, redrawRect);
@@ -45,15 +64,19 @@ void Whiteboard::paintEvent(QPaintEvent *event){
 }
 
 void Whiteboard::paint(QPoint point){
-    QPainter painter(&image);
-    painter.setPen(pen);
-    if(lastPoint == point)
-        painter.drawPoint(point);
-    else
-        painter.drawLine(lastPoint, point);
-    lastPoint=point;
-    painter.end();
-    update();
+//    if(boardName == "Receiver")
+//        qDebug()<< "\t\t\t" << boardName << " "<<point;
+//    else
+//        qDebug()<< boardName << " "<<point;
+//    QPainter painter(&image);
+//    painter.setPen(pen);
+//    if(lastPoint == point)
+//        painter.drawPoint(point);
+//    else
+//        painter.drawLine(lastPoint, point);
+//    lastPoint=point;
+//    painter.end();
+//    update();
 }
 
 void Whiteboard::resizeEvent(QResizeEvent *event){

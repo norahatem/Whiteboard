@@ -14,8 +14,8 @@
 #define T 1ms
 #define TX 15
 #define RX 16
-#define PERIOD 100us
-#define CLK_WAIT 10us
+#define PERIOD 10us
+#define CLK_WAIT 1us
 //acknowledge pulse on receive pi. This is an output
 #define ACK_RECEIVE 4
 //acknowledge pulse received on the sender side.

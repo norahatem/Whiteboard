@@ -6,7 +6,7 @@ Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
     setFixedSize(400,400);
 //    resize(400,400);
     setWindowTitle("Receiver");
-    drawingArea = new Whiteboard(this);
+    drawingArea = new Whiteboard("Receiver",this);
     setCentralWidget(drawingArea);
 //    start();
     receiveThread = std::thread(&Receiver::readData, this);
@@ -15,7 +15,7 @@ Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
 void Receiver::readData(){
     while(true){
         int data = read();
-        qDebug() << "\t\t\tReceived " << data;
+//        qDebug() << "\t\t\tReceived " << data;
         addPoint(data);
     }
 }

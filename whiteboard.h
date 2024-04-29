@@ -15,12 +15,12 @@
 
 #include <thread>
 #include <iostream>
-
+using namespace std::literals::chrono_literals;
 class Whiteboard: public QWidget
 {
 
 public:
-    explicit Whiteboard(QWidget *parent = nullptr);
+    explicit Whiteboard(QString name, QWidget *parent = nullptr);
     QMutex qLock;
     void setPenColor(QColor newColor);
     void setPenSize(double newSize);
@@ -50,18 +50,24 @@ private:
     QPixmap image;
     // QVector<QPoint> points;
     QColor penColor = "Black";
-    double penWidth = 3.5;
+    int penWidth = 3;
     QQueue<QPoint> points;
     QPen pen = QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     std::thread paintThread;
+    QString boardName;
     void painting(){
         while (true) {
             if(!points.empty()){
                 qLock.lock();
-                QPoint point = points.dequeue();
+//                QPoint point = points.dequeue();
+                update();
                 qLock.unlock();
-                paint(point);
+//                  update();
+
+//                paint(point);
+
             }
+            std::this_thread::sleep_for(10us);
         }
     }
 };

@@ -22,9 +22,9 @@ void initRpi(){
     digitalWrite(TX,LOW);
 }
 
-void send(int coordinate){
-    std::bitset<9> bits = coordinate;
-    qDebug() << "Bitset to Send" << QString::fromStdString(bits.to_string());
+void send(int data){
+    std::bitset<9> bits = data;
+//    qDebug() << "Bitset to Send" << QString::fromStdString(bits.to_string());
     for(int i = 0; i<bits.size() ; i++){
         //qDebug() <<"\t\t\t" <<bits[i];
         digitalWrite(TX,bits[i]);
@@ -53,6 +53,6 @@ int read(){
         }
         digitalWrite(ACK_RECEIVE, LOW);
 }
-    qDebug() << "\t\t\tBitset Read" << QString::fromStdString(readData.to_string());
+//    qDebug() << "\t\t\tBitset Read" << QString::fromStdString(readData.to_string());
     return (int)readData.to_ulong();
 }
