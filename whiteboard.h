@@ -59,15 +59,11 @@ private:
         while (true) {
             if(!points.empty()){
                 qLock.lock();
-//                QPoint point = points.dequeue();
                 update();
                 qLock.unlock();
-//                  update();
-
-//                paint(point);
 
             }
-            std::this_thread::sleep_for(10us);
+            std::this_thread::sleep_for(50ms);
         }
     }
 };

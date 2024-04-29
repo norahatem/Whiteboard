@@ -40,6 +40,26 @@ double Whiteboard::getPenWidth() const{
 void Whiteboard::paintEvent(QPaintEvent *event){
 
     QPainter painter1(&image);
+//    qLock.lock();
+//    for(int i=0;i<1;i++){
+//        if(!points.empty()){
+
+//                QPoint point = points.dequeue();
+
+//                painter1.setPen(pen);
+//                if(lastPoint == point)
+//                    painter1.drawPoint(point);
+//                else
+//                    painter1.drawLine(lastPoint, point);
+//                lastPoint=point;
+//        }
+//        else
+//            break;
+
+
+//    }
+//    qLock.unlock();
+//    painter1.end();
     while(!points.empty()){
             qLock.lock();
             QPoint point = points.dequeue();
