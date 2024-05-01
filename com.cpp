@@ -41,34 +41,34 @@ void send(DrawingCmd command){
         while(digitalRead(ACK_SEND))
             std::this_thread::sleep_for(ACK_WAIT);
     }
-    if(command.getCmd() !=0){
-            for(int i = 0; i<x.size() ; i++){
-                digitalWrite(TX,x[i]);
-                digitalWrite(clkM, HIGH);
-                std::this_thread::sleep_for(PERIOD);
-                while(!digitalRead(ACK_SEND))
-                    std::this_thread::sleep_for(ACK_WAIT);
-                digitalWrite(clkM, LOW);
-                std::this_thread::sleep_for(PERIOD);
-                while(digitalRead(ACK_SEND))
-                    std::this_thread::sleep_for(ACK_WAIT);
-            }
-            for(int i = 0; i<y.size() ; i++){
-                digitalWrite(TX,y[i]);
-                digitalWrite(clkM, HIGH);
-                std::this_thread::sleep_for(PERIOD);
-                while(!digitalRead(ACK_SEND))
-                    std::this_thread::sleep_for(ACK_WAIT);
-                digitalWrite(clkM, LOW);
-                std::this_thread::sleep_for(PERIOD);
-                while(digitalRead(ACK_SEND))
-                    std::this_thread::sleep_for(ACK_WAIT);
-            }
+//    if(command.getCmd() !=0){
+    for(int i = 0; i<x.size() ; i++){
+        digitalWrite(TX,x[i]);
+        digitalWrite(clkM, HIGH);
+        std::this_thread::sleep_for(PERIOD);
+        while(!digitalRead(ACK_SEND))
+            std::this_thread::sleep_for(ACK_WAIT);
+        digitalWrite(clkM, LOW);
+        std::this_thread::sleep_for(PERIOD);
+        while(digitalRead(ACK_SEND))
+            std::this_thread::sleep_for(ACK_WAIT);
+    }
+    for(int i = 0; i<y.size() ; i++){
+        digitalWrite(TX,y[i]);
+        digitalWrite(clkM, HIGH);
+        std::this_thread::sleep_for(PERIOD);
+        while(!digitalRead(ACK_SEND))
+            std::this_thread::sleep_for(ACK_WAIT);
+        digitalWrite(clkM, LOW);
+        std::this_thread::sleep_for(PERIOD);
+        while(digitalRead(ACK_SEND))
+            std::this_thread::sleep_for(ACK_WAIT);
+//            }
 }
 }
 std::bitset<40> read(){
     std::bitset<40> readData;
-    for(int i=0; i<8;i++){
+    for(int i=0; i<readData.size();i++){
         while(!digitalRead(clkS)){
             std::this_thread::sleep_for(CLK_WAIT);
         }
@@ -79,19 +79,19 @@ std::bitset<40> read(){
         }
         digitalWrite(ACK_RECEIVE, LOW);
     }
-    if(readData.to_ulong()!=0){
-        for(int i=8; i<readData.size();i++){
-            while(!digitalRead(clkS)){
-                std::this_thread::sleep_for(CLK_WAIT);
-            }
-            readData[i] = digitalRead(RX);
-            digitalWrite(ACK_RECEIVE, HIGH);
-            while(digitalRead(clkS)){
-                std::this_thread::sleep_for(CLK_WAIT);
-            }
-            digitalWrite(ACK_RECEIVE, LOW);
-        }
-    }
+//    if(readData.to_ulong()!=0){
+//        for(int i=8; i<readData.size();i++){
+//            while(!digitalRead(clkS)){
+//                std::this_thread::sleep_for(CLK_WAIT);
+//            }
+//            readData[i] = digitalRead(RX);
+//            digitalWrite(ACK_RECEIVE, HIGH);
+//            while(digitalRead(clkS)){
+//                std::this_thread::sleep_for(CLK_WAIT);
+//            }
+//            digitalWrite(ACK_RECEIVE, LOW);
+//        }
+//    }
 //    std::cout << "\t\t\tReceived data " << readData << "\n";
     return readData;
 }
