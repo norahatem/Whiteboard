@@ -3,7 +3,6 @@
 DrawingCmd::DrawingCmd()
 {
     cmd = CLEAR;
-
 }
 
 void DrawingCmd::setCmd(int command){
@@ -15,12 +14,12 @@ void DrawingCmd::setXCoordinate(int xCoordinate){
 void DrawingCmd::setYCoordinate(int yCoordinate){
     y_coordinate = yCoordinate;
 }
-std::bitset<8> DrawingCmd::getCmd(){
+int DrawingCmd::getCmd(){
     return cmd;
 }
-std::bitset<16>DrawingCmd::getX(){
+int DrawingCmd::getX(){
     return x_coordinate;
 }
-std::bitset<16>DrawingCmd::getY(){
+int DrawingCmd::getY(){
     return y_coordinate;
 }

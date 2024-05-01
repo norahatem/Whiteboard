@@ -13,9 +13,12 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 void Sender::mousePressEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         drawingArea->penDown(event->pos());
-//        cmd.setCmd();
+        drawingData.setCmd(2);
+        drawingData.setXCoordinate(event->pos().x());
+        drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-        sendPoints.enqueue(event->pos());
+//        sendPoints.enqueue(event->pos());
+        sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
 }
@@ -23,8 +26,12 @@ void Sender::mousePressEvent(QMouseEvent *event){
 void Sender::mouseMoveEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton){
         drawingArea->addPoint(event->pos());
+        drawingData.setCmd(3);
+        drawingData.setXCoordinate(event->pos().x());
+        drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-        sendPoints.enqueue(event->pos());
+//        sendPoints.enqueue(event->pos());
+        sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
 }
@@ -33,22 +40,28 @@ void Sender::mouseReleaseEvent(QMouseEvent *event){
 
     if(event->button() == Qt::LeftButton){
         drawingArea->penUp(event->pos());
+        drawingData.setCmd(1);
+        drawingData.setXCoordinate(event->pos().x());
+        drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-        sendPoints.enqueue(event->pos());
+//        sendPoints.enqueue(event->pos());
+        sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
 }
 
 void Sender::serialize(){
     while (true) {
-        if(!sendPoints.empty()){
+        if(!sendCommands.empty()){
             drawingArea->qLock.lock();
-            QPoint point = sendPoints.dequeue();
+//            QPoint point = sendPoints.dequeue();
+            DrawingCmd cmd = sendCommands.dequeue();
             drawingArea->qLock.unlock();
-//            qDebug() << "Sending x " << point.x();
-            send(point.x());
-//            qDebug() << "Sending y " << point.y();
-            send(point.y());
+////            qDebug() << "Sending x " << point.x();
+//            send(point.x());
+////            qDebug() << "Sending y " << point.y();
+//            send(point.y());
+            send(cmd);
         } else
             std::this_thread::sleep_for(100ms);
     }

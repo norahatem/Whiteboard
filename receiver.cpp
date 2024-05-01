@@ -13,24 +13,58 @@ Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
 }
 
 void Receiver::readData(){
+//    DrawingCmd dataPacket;
+    std::bitset<40> dataRead;
+    std::bitset<8> command;
+    std::bitset<16> x;
+    std::bitset<16> y;
     while(true){
-        int data = read();
-//        qDebug() << "\t\t\tReceived " << data;
-        addPoint(data);
+        dataRead = read();
+        for(int i = 0; i<8; i++){
+            command[i] = dataRead[i];
+        }
+        for(int i = 8; i<24; i++){
+            x[i-8] = dataRead[i];
+        }
+        for(int i = 24; i<40;i++){
+            y[i-24] = dataRead[i];
+        }
+        cmd.setCmd((int) command.to_ulong());
+        cmd.setXCoordinate((int) x.to_ulong());
+        cmd.setYCoordinate((int) y.to_ulong());
+//        drawingArea->qLock.lock();
+//        receivedCommands.enqueue(cmd);
+//        drawingArea->qLock.unlock();
+        addCmd(cmd);
     }
 }
 
-void Receiver::addPoint(int coordinate){
+void Receiver::addCmd(DrawingCmd cmd){
+    DrawingCmd temp;
     drawingArea->qLock.lock();
-    coordinates.push(coordinate);
+//    coordinates.push(coordinate);
+    receivedCommands.enqueue(cmd);
     drawingArea->qLock.unlock();
-    if (coordinates.size() >= 2){
-        drawingArea->qLock.lock();
-        int tempx = coordinates.front();
-        coordinates.pop();
-        int tempy = coordinates.front();
-        coordinates.pop();
-        drawingArea->qLock.unlock();
-        drawingArea->addPoint(QPoint(tempx, tempy));
+//    if (coordinates.size() >= 2){
+//        drawingArea->qLock.lock();
+//        int tempx = coordinates.front();
+//        coordinates.pop();
+//        int tempy = coordinates.front();
+//        coordinates.pop();
+//        drawingArea->qLock.unlock();
+//        drawingArea->addPoint(QPoint(tempx, tempy));
+//    }
+    if(!receivedCommands.empty()){
+        temp = receivedCommands.dequeue();
+        switch (temp.getCmd()) {
+        case 1:
+            drawingArea->penUp(QPoint(temp.getX(), temp.getY()));
+            break;
+        case 2:
+            drawingArea->penDown(QPoint(temp.getX(), temp.getY()));
+            break;
+        case 3:
+            drawingArea->addPoint(QPoint(temp.getX(), temp.getY()));
+        }
     }
 }

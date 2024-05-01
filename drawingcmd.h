@@ -14,19 +14,19 @@ public:
     void setCmd(int command);
     void setXCoordinate(int xCoordinate);
     void setYCoordinate(int yCoordinate);
-    std::bitset<8> getCmd();
-    std::bitset<16> getX();
-    std::bitset<16> getY();
+    int getCmd();
+    int getX();
+    int getY();
 private:
 //    cmd 0: clear
 //    cmd 2: penUp
 //    cmd 3: penDown
 //    cmd 4: addPoint
-    std::bitset<8> cmd;
+    int cmd;
 //    std::bitset<24> penColour;
 //    std::bitset<8> penWidth;
-    std::bitset<16> x_coordinate;
-    std::bitset<16> y_coordinate;
+    int x_coordinate;
+    int y_coordinate;
 //    std::bitset<24> backgroundColor;
 };
 

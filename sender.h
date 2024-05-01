@@ -30,7 +30,9 @@ private slots:
 
 private:
     Whiteboard *drawingArea;
-    QQueue<QPoint> sendPoints;
+//    QQueue<QPoint> sendPoints;
+    QQueue<DrawingCmd> sendCommands;
+    DrawingCmd drawingData;
     std::thread senderThread;
     void serialize();
     DrawingCmd cmd;

@@ -8,6 +8,8 @@
 #include <bitset>
 #include <thread>
 
+#include "drawingcmd.h"
+
 
 #define clkM 2
 #define clkS 3
@@ -25,10 +27,12 @@
 
 void initRpi();
 
-void send(int coordinate);
+//void send(int coordinate);
+void send(DrawingCmd command);
 
-int read();
+//int read();
+std::bitset<40> read();
 
-void serialize();
+//void serialize();
 
 #endif // COM_H

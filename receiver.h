@@ -23,11 +23,14 @@ protected:
 
 private:
     Whiteboard *drawingArea;
-    QQueue<QPoint> receivePoints;
-    std::queue<int> coordinates;
+//    QQueue<QPoint> receivePoints;
+    QQueue<DrawingCmd> receivedCommands;
+    DrawingCmd cmd;
+//    std::queue<int> coordinates;
     std::thread receiveThread;
     void readData();
-    void addPoint(int coordinate);
+//    void addPoint(int coordinate);
+    void addCmd(DrawingCmd cmd);
 };
 
 #endif // RECEIVER_H
