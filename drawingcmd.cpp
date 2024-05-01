@@ -2,7 +2,7 @@
 
 DrawingCmd::DrawingCmd()
 {
-    cmd = CLEAR;
+//    cmd = CLEAR;
 }
 
 void DrawingCmd::setCmd(int command){

@@ -3,8 +3,8 @@
 Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
 {
     // set form size
-    setFixedSize(400,400);
-//    resize(400,400);
+    setMinimumSize(400,400);
+    resize(400,400);
     setWindowTitle("Receiver");
     drawingArea = new Whiteboard("Receiver",this);
     setCentralWidget(drawingArea);
@@ -23,15 +23,19 @@ void Receiver::readData(){
         for(int i = 0; i<8; i++){
             command[i] = dataRead[i];
         }
-        for(int i = 8; i<24; i++){
-            x[i-8] = dataRead[i];
-        }
-        for(int i = 24; i<40;i++){
-            y[i-24] = dataRead[i];
-        }
         cmd.setCmd((int) command.to_ulong());
-        cmd.setXCoordinate((int) x.to_ulong());
-        cmd.setYCoordinate((int) y.to_ulong());
+        if(cmd.getCmd() != 0){
+            for(int i = 8; i<24; i++){
+                x[i-8] = dataRead[i];
+            }
+            for(int i = 24; i<40;i++){
+                y[i-24] = dataRead[i];
+            }
+            cmd.setXCoordinate((int) x.to_ulong());
+            cmd.setYCoordinate((int) y.to_ulong());
+
+        }
+
 //        drawingArea->qLock.lock();
 //        receivedCommands.enqueue(cmd);
 //        drawingArea->qLock.unlock();
@@ -57,6 +61,9 @@ void Receiver::addCmd(DrawingCmd cmd){
     if(!receivedCommands.empty()){
         temp = receivedCommands.dequeue();
         switch (temp.getCmd()) {
+        case 0:
+            drawingArea->clear();
+            break;
         case 1:
             drawingArea->penUp(QPoint(temp.getX(), temp.getY()));
             break;

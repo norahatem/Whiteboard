@@ -1,9 +1,11 @@
 #include "sender.h"
-
+#include <QMenu>
+#include <QMenuBar>
 
 Sender::Sender(QWidget *parent) : QMainWindow(parent)
 {
-    setFixedSize(400,400);
+    setMinimumSize(400,400);
+    resize(400,400);
     setWindowTitle("Sender");
     drawingArea = new Whiteboard("Sender", this);
     setCentralWidget(drawingArea);
@@ -17,7 +19,6 @@ void Sender::mousePressEvent(QMouseEvent *event){
         drawingData.setXCoordinate(event->pos().x());
         drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-//        sendPoints.enqueue(event->pos());
         sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
@@ -30,7 +31,6 @@ void Sender::mouseMoveEvent(QMouseEvent *event){
         drawingData.setXCoordinate(event->pos().x());
         drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-//        sendPoints.enqueue(event->pos());
         sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
@@ -44,23 +44,25 @@ void Sender::mouseReleaseEvent(QMouseEvent *event){
         drawingData.setXCoordinate(event->pos().x());
         drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-//        sendPoints.enqueue(event->pos());
         sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
+}
+
+void Sender::clearBoard(){
+    drawingArea->clear();
+    drawingData.setCmd(0);
+    drawingArea->qLock.lock();
+    sendCommands.enqueue(drawingData);
+    drawingArea->qLock.unlock();
 }
 
 void Sender::serialize(){
     while (true) {
         if(!sendCommands.empty()){
             drawingArea->qLock.lock();
-//            QPoint point = sendPoints.dequeue();
             DrawingCmd cmd = sendCommands.dequeue();
             drawingArea->qLock.unlock();
-////            qDebug() << "Sending x " << point.x();
-//            send(point.x());
-////            qDebug() << "Sending y " << point.y();
-//            send(point.y());
             send(cmd);
         } else
             std::this_thread::sleep_for(100ms);
