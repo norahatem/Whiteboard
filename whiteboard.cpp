@@ -15,14 +15,17 @@ Whiteboard::Whiteboard(QString name, QWidget *parent)
 
 void Whiteboard::setPenColor(QColor newPenColor){
     penColor = newPenColor;
+    pen.setColor(penColor);
 }
 
-void Whiteboard::setPenSize(double newPenSize){
+void Whiteboard::setPenSize(int newPenSize){
     penWidth = newPenSize;
+    pen.setWidth(newPenSize);
 }
 
 void Whiteboard::clear(){
     image.fill(QColor("white"));
+    update();
 }
 
 QColor Whiteboard::getPenColor() const{
@@ -39,41 +42,21 @@ double Whiteboard::getPenWidth() const{
 
 void Whiteboard::paintEvent(QPaintEvent *event){
 
-    QPainter painter1(&image);
-//    qLock.lock();
-//    for(int i=0;i<1;i++){
-//        if(!points.empty()){
-
-//                QPoint point = points.dequeue();
-
-//                painter1.setPen(pen);
-//                if(lastPoint == point)
-//                    painter1.drawPoint(point);
-//                else
-//                    painter1.drawLine(lastPoint, point);
-//                lastPoint=point;
-//        }
-//        else
-//            break;
-
-
-//    }
-//    qLock.unlock();
-//    painter1.end();
+    QPainter imgPainter(&image);
     while(!points.empty()){
             qLock.lock();
             QPoint point = points.dequeue();
             qLock.unlock();
-            painter1.setPen(pen);
+            imgPainter.setPen(pen);
             if(lastPoint == point)
-                painter1.drawPoint(point);
+                imgPainter.drawPoint(point);
             else
-                painter1.drawLine(lastPoint, point);
+                imgPainter.drawLine(lastPoint, point);
             lastPoint=point;
 
 
         }
-        painter1.end();
+        imgPainter.end();
 
 
 
@@ -84,19 +67,6 @@ void Whiteboard::paintEvent(QPaintEvent *event){
 }
 
 void Whiteboard::paint(QPoint point){
-//    if(boardName == "Receiver")
-//        qDebug()<< "\t\t\t" << boardName << " "<<point;
-//    else
-//        qDebug()<< boardName << " "<<point;
-//    QPainter painter(&image);
-//    painter.setPen(pen);
-//    if(lastPoint == point)
-//        painter.drawPoint(point);
-//    else
-//        painter.drawLine(lastPoint, point);
-//    lastPoint=point;
-//    painter.end();
-//    update();
 }
 
 void Whiteboard::resizeEvent(QResizeEvent *event){

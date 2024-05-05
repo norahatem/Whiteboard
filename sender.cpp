@@ -1,9 +1,11 @@
 #include "sender.h"
-
+#include <QMenu>
+#include <QMenuBar>
 
 Sender::Sender(QWidget *parent) : QMainWindow(parent)
 {
-    setFixedSize(400,400);
+    setMinimumSize(400,400);
+    resize(400,400);
     setWindowTitle("Sender");
     drawingArea = new Whiteboard("Sender", this);
     setCentralWidget(drawingArea);
@@ -13,9 +15,11 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 void Sender::mousePressEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         drawingArea->penDown(event->pos());
-//        cmd.setCmd();
+        drawingData.setCmd(PEN_DOWN);
+        drawingData.setXCoordinate(event->pos().x());
+        drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-        sendPoints.enqueue(event->pos());
+        sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
 }
@@ -23,8 +27,11 @@ void Sender::mousePressEvent(QMouseEvent *event){
 void Sender::mouseMoveEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton){
         drawingArea->addPoint(event->pos());
+        drawingData.setCmd(ADD_POINT);
+        drawingData.setXCoordinate(event->pos().x());
+        drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-        sendPoints.enqueue(event->pos());
+        sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
 }
@@ -33,22 +40,50 @@ void Sender::mouseReleaseEvent(QMouseEvent *event){
 
     if(event->button() == Qt::LeftButton){
         drawingArea->penUp(event->pos());
+        drawingData.setCmd(PEN_UP);
+        drawingData.setXCoordinate(event->pos().x());
+        drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
-        sendPoints.enqueue(event->pos());
+        sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
 }
 
+void Sender::clearBoard(){
+    drawingArea->clear();
+    drawingData.setCmd(CLEAR);
+    drawingArea->qLock.lock();
+    sendCommands.enqueue(drawingData);
+    drawingArea->qLock.unlock();
+}
+
+void Sender::ChangePenColor(QColor newPenColor){
+    drawingArea->setPenColor(newPenColor);
+    drawingData.setCmd(CHANGE_PEN_COLOR);
+    drawingData.setRed(newPenColor.red());
+    drawingData.setGreen(newPenColor.green());
+    drawingData.setBlue(newPenColor.blue());
+    drawingArea->qLock.lock();
+    sendCommands.enqueue(drawingData);
+    drawingArea->qLock.unlock();
+}
+
+void Sender::changePenWidth(int newPenWidth){
+    drawingArea->setPenSize(newPenWidth);
+    drawingData.setCmd(CHANGE_PEN_WIDTH);
+    drawingData.setPenWidth(newPenWidth);
+    drawingArea->qLock.lock();
+    sendCommands.enqueue(drawingData);
+    drawingArea->qLock.unlock();
+}
+
 void Sender::serialize(){
     while (true) {
-        if(!sendPoints.empty()){
+        if(!sendCommands.empty()){
             drawingArea->qLock.lock();
-            QPoint point = sendPoints.dequeue();
+            DrawingCmd cmd = sendCommands.dequeue();
             drawingArea->qLock.unlock();
-//            qDebug() << "Sending x " << point.x();
-            send(point.x());
-//            qDebug() << "Sending y " << point.y();
-            send(point.y());
+            cmd.send();
         } else
             std::this_thread::sleep_for(100ms);
     }

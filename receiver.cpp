@@ -3,34 +3,53 @@
 Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
 {
     // set form size
-    setFixedSize(400,400);
-//    resize(400,400);
+    setMinimumSize(400,400);
+    resize(400,400);
     setWindowTitle("Receiver");
     drawingArea = new Whiteboard("Receiver",this);
     setCentralWidget(drawingArea);
-//    start();
     receiveThread = std::thread(&Receiver::readData, this);
 }
 
 void Receiver::readData(){
     while(true){
-        int data = read();
-//        qDebug() << "\t\t\tReceived " << data;
-        addPoint(data);
+        cmd.receive();
+        addCmd(cmd);
     }
 }
 
-void Receiver::addPoint(int coordinate){
+void Receiver::addCmd(DrawingCmd cmd){
+    DrawingCmd temp;
     drawingArea->qLock.lock();
-    coordinates.push(coordinate);
+    receivedCommands.enqueue(cmd);
     drawingArea->qLock.unlock();
-    if (coordinates.size() >= 2){
-        drawingArea->qLock.lock();
-        int tempx = coordinates.front();
-        coordinates.pop();
-        int tempy = coordinates.front();
-        coordinates.pop();
-        drawingArea->qLock.unlock();
-        drawingArea->addPoint(QPoint(tempx, tempy));
+    if(!receivedCommands.empty()){
+        temp = receivedCommands.dequeue();
+        switch (temp.getCmd().to_ulong()) {
+        case CLEAR:
+//            qDebug() << "Clear\n";
+            drawingArea->clear();
+            break;
+        case PEN_UP:
+//            qDebug() << "PenUp\n";
+            drawingArea->penUp(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
+            break;
+        case PEN_DOWN:
+//            qDebug() << "PenDown\n";
+            drawingArea->penDown(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
+            break;
+        case ADD_POINT:
+//            qDebug() << "AddPoint\n";
+            drawingArea->addPoint(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
+            break;
+        case CHANGE_PEN_WIDTH:
+            drawingArea->setPenSize(temp.getPenWidth());
+            break;
+        case CHANGE_PEN_COLOR:
+            QColor pCol = QColor(temp.getRed().to_ulong(), temp.getGreen().to_ulong(), temp.getBlue().to_ulong());
+//            qDebug() << pCol;
+            drawingArea->setPenColor(pCol);
+            break;
+        }
     }
 }
