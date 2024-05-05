@@ -81,6 +81,14 @@ void DrawingCmd::sendData(std::bitset<N>& sendData) {
     }
 }
 
+void DrawingCmd::setPenWidth(int newPenWidth){
+    penWidth = newPenWidth;
+}
+
+int DrawingCmd::getPenWidth(){
+    return (int) penWidth.to_ulong();
+}
+
 void DrawingCmd::receive(){
     readData(cmd);
     switch ((uint8_t) cmd.to_ulong()) {
@@ -90,6 +98,9 @@ void DrawingCmd::receive(){
         readData(red);
         readData(green);
         readData(blue);
+        break;
+    case CHANGE_PEN_WIDTH:
+        readData(penWidth);
         break;
     case PEN_DOWN:
     case PEN_UP:
@@ -103,23 +114,28 @@ void DrawingCmd::receive(){
 
 void DrawingCmd::send(){
     auto sendClear = std::bitset<8>();
-        auto sendColor = std::bitset<32>();
-        auto dataToSend = std::bitset<40>();
+    auto sendColor = std::bitset<32>();
+    auto dataToSend = std::bitset<40>();
+    auto sendWidth = std::bitset<16>();
 
-        switch ((uint8_t) cmd.to_ulong()) {
-        case CLEAR:
-            sendClear = concat<8>(cmd);
-            sendData(sendClear);
-            break;
-        case CHANGE_PEN_COLOR:
-            sendColor = concat<32>(blue, green, red, cmd);
-            sendData(sendColor);
-            break;
-        case PEN_DOWN:
-        case PEN_UP:
-        case ADD_POINT:
-            dataToSend = concat<40>(y_coordinate, x_coordinate, cmd);
-            sendData(dataToSend);
-            break;
-        }
+    switch ((uint8_t) cmd.to_ulong()) {
+    case CLEAR:
+        sendClear = concat<8>(cmd);
+        sendData(sendClear);
+        break;
+    case CHANGE_PEN_COLOR:
+        sendColor = concat<32>(blue, green, red, cmd);
+        sendData(sendColor);
+        break;
+    case CHANGE_PEN_WIDTH:
+        sendWidth = concat<16>(penWidth, cmd);
+        sendData(sendWidth);
+        break;
+    case PEN_DOWN:
+    case PEN_UP:
+    case ADD_POINT:
+        dataToSend = concat<40>(y_coordinate, x_coordinate, cmd);
+        sendData(dataToSend);
+        break;
+    }
 }

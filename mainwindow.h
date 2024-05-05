@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QColorDialog>
+#include <QInputDialog>
 
 #include "sender.h"
 #include "receiver.h"
@@ -21,6 +22,7 @@ public:
 
 private slots:
     void changePenColor();
+    void changePenWidth();
 
 private:
     Sender *sender;
@@ -32,6 +34,7 @@ private:
     QMenu *options;
     QAction *clearScreen;
     QAction *changeColor;
+    QAction *changeWidth;
 
 };
 

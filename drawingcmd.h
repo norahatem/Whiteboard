@@ -27,6 +27,7 @@ static const uint8_t PEN_UP = 1;
 static const uint8_t PEN_DOWN = 2;
 static const uint8_t ADD_POINT = 3;
 static const uint8_t CHANGE_PEN_COLOR = 4;
+static const uint8_t CHANGE_PEN_WIDTH = 5;
 
 using namespace std::literals::chrono_literals;
 class DrawingCmd
@@ -49,6 +50,8 @@ public:
     void setGreen(int g);
     void setBlue(int b);
 
+    void setPenWidth(int newPenWidth);
+    int getPenWidth();
 
     void send();
     void receive();
@@ -70,6 +73,8 @@ private:
     std::bitset<8> red;
     std::bitset<8> green;
     std::bitset<8> blue;
+
+    std::bitset<8> penWidth;
 };
 
 #endif // DRAWINGCMD_H

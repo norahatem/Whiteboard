@@ -15,7 +15,7 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 void Sender::mousePressEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         drawingArea->penDown(event->pos());
-        drawingData.setCmd(2);
+        drawingData.setCmd(PEN_DOWN);
         drawingData.setXCoordinate(event->pos().x());
         drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
@@ -27,7 +27,7 @@ void Sender::mousePressEvent(QMouseEvent *event){
 void Sender::mouseMoveEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton){
         drawingArea->addPoint(event->pos());
-        drawingData.setCmd(3);
+        drawingData.setCmd(ADD_POINT);
         drawingData.setXCoordinate(event->pos().x());
         drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
@@ -40,7 +40,7 @@ void Sender::mouseReleaseEvent(QMouseEvent *event){
 
     if(event->button() == Qt::LeftButton){
         drawingArea->penUp(event->pos());
-        drawingData.setCmd(1);
+        drawingData.setCmd(PEN_UP);
         drawingData.setXCoordinate(event->pos().x());
         drawingData.setYCoordinate(event->pos().y());
         drawingArea->qLock.lock();
@@ -51,7 +51,7 @@ void Sender::mouseReleaseEvent(QMouseEvent *event){
 
 void Sender::clearBoard(){
     drawingArea->clear();
-    drawingData.setCmd(0);
+    drawingData.setCmd(CLEAR);
     drawingArea->qLock.lock();
     sendCommands.enqueue(drawingData);
     drawingArea->qLock.unlock();
@@ -59,10 +59,19 @@ void Sender::clearBoard(){
 
 void Sender::ChangePenColor(QColor newPenColor){
     drawingArea->setPenColor(newPenColor);
-    drawingData.setCmd(4);
+    drawingData.setCmd(CHANGE_PEN_COLOR);
     drawingData.setRed(newPenColor.red());
     drawingData.setGreen(newPenColor.green());
     drawingData.setBlue(newPenColor.blue());
+    drawingArea->qLock.lock();
+    sendCommands.enqueue(drawingData);
+    drawingArea->qLock.unlock();
+}
+
+void Sender::changePenWidth(int newPenWidth){
+    drawingArea->setPenSize(newPenWidth);
+    drawingData.setCmd(CHANGE_PEN_WIDTH);
+    drawingData.setPenWidth(newPenWidth);
     drawingArea->qLock.lock();
     sendCommands.enqueue(drawingData);
     drawingArea->qLock.unlock();

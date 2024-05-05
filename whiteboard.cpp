@@ -18,7 +18,7 @@ void Whiteboard::setPenColor(QColor newPenColor){
     pen.setColor(penColor);
 }
 
-void Whiteboard::setPenSize(double newPenSize){
+void Whiteboard::setPenSize(int newPenSize){
     penWidth = newPenSize;
     pen.setWidth(newPenSize);
 }

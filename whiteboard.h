@@ -23,7 +23,7 @@ public:
     explicit Whiteboard(QString name, QWidget *parent = nullptr);
     QMutex qLock;
     void setPenColor(QColor newColor);
-    void setPenSize(double newSize);
+    void setPenSize(int newSize);
 
     // getter methods
     bool getIsModified() const;

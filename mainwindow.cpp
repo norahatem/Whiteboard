@@ -50,12 +50,16 @@ void MainWindow::createAction(){
 
     changeColor = new QAction(tr("&Pen Color"), this);
     connect(changeColor, &QAction::triggered, this, &MainWindow::changePenColor);
+
+    changeWidth = new QAction(tr("&Pen Width"), this);
+    connect(changeWidth, &QAction::triggered, this, &MainWindow::changePenWidth);
 }
 
 void MainWindow::createMenu(){
     options = new QMenu(tr("&Options"), this);
     options->addAction(clearScreen);
     options->addAction(changeColor);
+    options->addAction(changeWidth);
     menuBar()->addMenu(options);
 }
 
@@ -65,4 +69,13 @@ void MainWindow::changePenColor(){
     if(newColor.isValid()){
         sender->ChangePenColor(newColor.name());
     }
+}
+
+void MainWindow::changePenWidth(){
+    bool ok;
+    int newWidth = QInputDialog::getInt(this, tr("Whiteboard"), tr("Select pen width:"),
+                                        sender->drawingArea->getPenWidth(),
+                                        1,50,1,&ok);
+    if(ok)
+        sender->changePenWidth(newWidth);
 }

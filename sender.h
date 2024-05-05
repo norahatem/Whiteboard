@@ -28,6 +28,7 @@ protected:
 public slots:
     void clearBoard();
     void ChangePenColor(QColor newPenColor);
+    void changePenWidth(int newPenWidth);
 private:
     QQueue<DrawingCmd> sendCommands;
     DrawingCmd drawingData;
