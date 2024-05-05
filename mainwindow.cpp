@@ -52,10 +52,23 @@ MainWindow::~MainWindow()
 void MainWindow::createAction(){
     clearScreen = new QAction(tr("&Clear"), this);
     connect(clearScreen, &QAction::triggered, sender, &Sender::clearBoard);
+
+    changeColor = new QAction(tr("&Pen Color"), this);
+    connect(changeColor, &QAction::triggered, this, &MainWindow::changePenColor);
 }
 
 void MainWindow::createMenu(){
     options = new QMenu(tr("&Options"), this);
     options->addAction(clearScreen);
+    options->addAction(changeColor);
     menuBar()->addMenu(options);
+}
+
+
+void MainWindow::changePenColor(){
+    QColor newColor = QColorDialog::getColor(sender->drawingArea->getPenColor());
+    if(newColor.isValid()){
+        sender->drawingArea->setPenColor(newColor.name());
+        qDebug() << newColor.name() << "\n";
+    }
 }

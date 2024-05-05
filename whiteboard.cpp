@@ -15,10 +15,12 @@ Whiteboard::Whiteboard(QString name, QWidget *parent)
 
 void Whiteboard::setPenColor(QColor newPenColor){
     penColor = newPenColor;
+    pen.setColor(penColor);
 }
 
 void Whiteboard::setPenSize(double newPenSize){
     penWidth = newPenSize;
+    pen.setWidth(newPenSize);
 }
 
 void Whiteboard::clear(){

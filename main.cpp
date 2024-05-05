@@ -11,9 +11,12 @@ int main(int argc, char *argv[])
 {
     initRpi();
     QApplication app(argc, argv);
-    QQueue<QPoint> points;
 
     MainWindow mainW;
     mainW.show();
+//    Sender send;
+//    Receiver receive;
+//    send.show();
+//    receive.show();
     return app.exec();
 }

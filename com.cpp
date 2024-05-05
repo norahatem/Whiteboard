@@ -1,15 +1,7 @@
 #include "com.h"
 
 
-using namespace std::literals::chrono_literals;
 void initRpi(){
-//    wiringPiSetup();
-//    pinMode(2,OUTPUT);
-//    pinMode(3,INPUT);
-//    pinMode(TX,OUTPUT);
-//    pinMode(RX,INPUT);
-//    digitalWrite(TX,LOW);
-
     wiringPiSetup();
     pinMode(clkM,OUTPUT);
     pinMode(clkS,INPUT);
@@ -79,19 +71,6 @@ std::bitset<40> read(){
         }
         digitalWrite(ACK_RECEIVE, LOW);
     }
-//    if(readData.to_ulong()!=0){
-//        for(int i=8; i<readData.size();i++){
-//            while(!digitalRead(clkS)){
-//                std::this_thread::sleep_for(CLK_WAIT);
-//            }
-//            readData[i] = digitalRead(RX);
-//            digitalWrite(ACK_RECEIVE, HIGH);
-//            while(digitalRead(clkS)){
-//                std::this_thread::sleep_for(CLK_WAIT);
-//            }
-//            digitalWrite(ACK_RECEIVE, LOW);
-//        }
-//    }
-//    std::cout << "\t\t\tReceived data " << readData << "\n";
+
     return readData;
 }

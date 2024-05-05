@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
+#include <QColorDialog>
 
 #include "sender.h"
 #include "receiver.h"
@@ -18,6 +19,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void changePenColor();
+
 private:
     Sender *sender;
     Receiver *receiver;
@@ -27,6 +31,7 @@ private:
 
     QMenu *options;
     QAction *clearScreen;
+    QAction *changeColor;
 
 };
 

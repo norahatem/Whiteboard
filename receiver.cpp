@@ -19,26 +19,7 @@ void Receiver::readData(){
     std::bitset<16> x;
     std::bitset<16> y;
     while(true){
-        dataRead = read();
-        for(int i = 0; i<8; i++){
-            command[i] = dataRead[i];
-        }
-        cmd.setCmd((int) command.to_ulong());
-        if(cmd.getCmd() != 0){
-            for(int i = 8; i<24; i++){
-                x[i-8] = dataRead[i];
-            }
-            for(int i = 24; i<40;i++){
-                y[i-24] = dataRead[i];
-            }
-            cmd.setXCoordinate((int) x.to_ulong());
-            cmd.setYCoordinate((int) y.to_ulong());
-
-        }
-
-//        drawingArea->qLock.lock();
-//        receivedCommands.enqueue(cmd);
-//        drawingArea->qLock.unlock();
+        cmd.receive();
         addCmd(cmd);
     }
 }
@@ -46,32 +27,28 @@ void Receiver::readData(){
 void Receiver::addCmd(DrawingCmd cmd){
     DrawingCmd temp;
     drawingArea->qLock.lock();
-//    coordinates.push(coordinate);
     receivedCommands.enqueue(cmd);
     drawingArea->qLock.unlock();
-//    if (coordinates.size() >= 2){
-//        drawingArea->qLock.lock();
-//        int tempx = coordinates.front();
-//        coordinates.pop();
-//        int tempy = coordinates.front();
-//        coordinates.pop();
-//        drawingArea->qLock.unlock();
-//        drawingArea->addPoint(QPoint(tempx, tempy));
-//    }
     if(!receivedCommands.empty()){
         temp = receivedCommands.dequeue();
-        switch (temp.getCmd()) {
+        switch (temp.getCmd().to_ulong()) {
         case 0:
             drawingArea->clear();
             break;
         case 1:
-            drawingArea->penUp(QPoint(temp.getX(), temp.getY()));
+            drawingArea->penUp(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
             break;
         case 2:
-            drawingArea->penDown(QPoint(temp.getX(), temp.getY()));
+            drawingArea->penDown(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
             break;
         case 3:
-            drawingArea->addPoint(QPoint(temp.getX(), temp.getY()));
+            drawingArea->addPoint(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
+            break;
+        case 4:
+            QColor pCol = QColor(temp.getRed().to_ulong(), temp.getGreen().to_ulong(), temp.getBlue().to_ulong());
+            qDebug() << pCol;
+            drawingArea->setPenColor(pCol);
+            break;
         }
     }
 }

@@ -63,7 +63,8 @@ void Sender::serialize(){
             drawingArea->qLock.lock();
             DrawingCmd cmd = sendCommands.dequeue();
             drawingArea->qLock.unlock();
-            send(cmd);
+//            send(cmd);
+            cmd.send();
         } else
             std::this_thread::sleep_for(100ms);
     }
