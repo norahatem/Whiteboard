@@ -9,7 +9,6 @@
 #include <thread>
 
 #include "whiteboard.h"
-#include "com.h"
 #include "drawingcmd.h"
 
 using namespace std;
@@ -18,20 +17,18 @@ class Sender: public QMainWindow
 {
      Q_OBJECT
 public:
-//    Sender(QQueue<QPoint> *sendQ, QWidget *parent = 0);
     Sender(QWidget *parent = 0);
     Whiteboard *drawingArea;
 
-
 protected:
     void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event)override;
-    void mouseReleaseEvent(QMouseEvent *event)override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 public slots:
     void clearBoard();
+    void ChangePenColor(QColor newPenColor);
 private:
-//    QQueue<QPoint> sendPoints;
     QQueue<DrawingCmd> sendCommands;
     DrawingCmd drawingData;
     std::thread senderThread;

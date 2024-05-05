@@ -10,8 +10,6 @@
 
 #include "drawingcmd.h"
 
-
-
 void initRpi();
 
 #endif // COM_H

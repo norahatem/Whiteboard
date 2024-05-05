@@ -9,7 +9,7 @@
 #include <queue>
 
 #include "whiteboard.h"
-#include "com.h"
+#include "drawingcmd.h"
 
 using namespace std::literals::chrono_literals;
 
@@ -23,13 +23,10 @@ protected:
 
 private:
     Whiteboard *drawingArea;
-//    QQueue<QPoint> receivePoints;
     QQueue<DrawingCmd> receivedCommands;
     DrawingCmd cmd;
-//    std::queue<int> coordinates;
     std::thread receiveThread;
     void readData();
-//    void addPoint(int coordinate);
     void addCmd(DrawingCmd cmd);
 };
 

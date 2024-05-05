@@ -2,11 +2,6 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-//    auto *clear = new QAction("&Clear", this);
-//    QMenu *options = menuBar()->addMenu("&Options");
-//    options->addAction(clear);
-////    connect(clear, &QAction::triggered, sender , &Sender::clearBoard);
-
     QQueue<QPoint> points;
     sender = new Sender(this);
     receiver = new Receiver(this);
@@ -68,7 +63,6 @@ void MainWindow::createMenu(){
 void MainWindow::changePenColor(){
     QColor newColor = QColorDialog::getColor(sender->drawingArea->getPenColor());
     if(newColor.isValid()){
-        sender->drawingArea->setPenColor(newColor.name());
-        qDebug() << newColor.name() << "\n";
+        sender->ChangePenColor(newColor.name());
     }
 }

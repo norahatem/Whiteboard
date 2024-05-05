@@ -18,7 +18,7 @@ set(PROJECT_SOURCES
         sender.h sender.cpp
         whiteboard.h whiteboard.cpp
         mainwindow.h mainwindow.cpp
-        com.h com.cpp
+#        com.h com.cpp
         drawingcmd.h drawingcmd.cpp
 )
 

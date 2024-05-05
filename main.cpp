@@ -4,8 +4,20 @@
 #include <thread>
 
 #include "mainwindow.h"
-#include "com.h"
+#include "drawingcmd.h"
 
+void initRpi(){
+    wiringPiSetup();
+    pinMode(clkM,OUTPUT);
+    pinMode(clkS,INPUT);
+    pinMode(TX,OUTPUT);
+    pinMode(RX,INPUT);
+    pinMode(ACK_RECEIVE, OUTPUT);
+    pinMode(ACK_SEND, INPUT);
+    digitalWrite(ACK_RECEIVE, LOW);
+    digitalWrite(clkM,LOW);
+    digitalWrite(TX,LOW);
+}
 
 int main(int argc, char *argv[])
 {

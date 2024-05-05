@@ -57,13 +57,23 @@ void Sender::clearBoard(){
     drawingArea->qLock.unlock();
 }
 
+void Sender::ChangePenColor(QColor newPenColor){
+    drawingArea->setPenColor(newPenColor);
+    drawingData.setCmd(4);
+    drawingData.setRed(newPenColor.red());
+    drawingData.setGreen(newPenColor.green());
+    drawingData.setBlue(newPenColor.blue());
+    drawingArea->qLock.lock();
+    sendCommands.enqueue(drawingData);
+    drawingArea->qLock.unlock();
+}
+
 void Sender::serialize(){
     while (true) {
         if(!sendCommands.empty()){
             drawingArea->qLock.lock();
             DrawingCmd cmd = sendCommands.dequeue();
             drawingArea->qLock.unlock();
-//            send(cmd);
             cmd.send();
         } else
             std::this_thread::sleep_for(100ms);

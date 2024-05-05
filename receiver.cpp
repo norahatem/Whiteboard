@@ -33,15 +33,19 @@ void Receiver::addCmd(DrawingCmd cmd){
         temp = receivedCommands.dequeue();
         switch (temp.getCmd().to_ulong()) {
         case 0:
+            qDebug() << "Clear\n";
             drawingArea->clear();
             break;
         case 1:
+            qDebug() << "PenUp\n";
             drawingArea->penUp(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
             break;
         case 2:
+            qDebug() << "PenDown\n";
             drawingArea->penDown(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
             break;
         case 3:
+            qDebug() << "AddPoint\n";
             drawingArea->addPoint(QPoint(temp.getX().to_ulong(), temp.getY().to_ulong()));
             break;
         case 4:

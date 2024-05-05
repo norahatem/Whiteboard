@@ -22,6 +22,11 @@
 //#define ACK_TIME 1us
 #define ACK_WAIT 1us
 
+static const uint8_t CLEAR = 0;
+static const uint8_t PEN_UP = 1;
+static const uint8_t PEN_DOWN = 2;
+static const uint8_t ADD_POINT = 3;
+static const uint8_t CHANGE_PEN_COLOR = 4;
 
 using namespace std::literals::chrono_literals;
 class DrawingCmd
@@ -47,12 +52,6 @@ public:
 
     void send();
     void receive();
-
-    static const uint8_t CLEAR = 0;
-    static const uint8_t PEN_UP = 1;
-    static const uint8_t PEN_DOWN = 2;
-    static const uint8_t ADD_POINT = 3;
-    static const uint8_t CHANGE_PEN_COLOR = 4;
 
     template <size_t N, size_t... Sizes>
     std::bitset<N> concat(const std::bitset<Sizes>&... bitsets);
