@@ -13,14 +13,23 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 //function tht takes the command and the point ad sets the commands and enqueue it to the queue
 //this is made possible since they all send x and y coordinates but only the command is different
 void Sender::sendCmd(int cmd, QPoint point) {
-    if ((point.x() <= width() && point.x() >= 0) && (point.y() <= height() && point.y() >= 0)) {
-        drawingData.setCmd(cmd);
+    drawingData.setCmd(cmd);
+    qDebug() << "Actual point " << point;
+    if ((point.x() >= 0) && (point.y() >= 0)) {
         drawingData.setXCoordinate(point.x());
         drawingData.setYCoordinate(point.y());
-        drawingArea->qLock.lock();
-        sendCommands.enqueue(drawingData);
-        drawingArea->qLock.unlock();
+
+    }else{
+        if(point.x() < 0){
+            drawingData.setXCoordinate((-1*point.x()+32768));
+        }
+        if(point.y() < 0)
+            drawingData.setYCoordinate((-1*point.y()+32768));
     }
+    qDebug() << "\t Sent point" << drawingData.getX() << " " << drawingData.getY();
+    drawingArea->qLock.lock();
+    sendCommands.enqueue(drawingData);
+    drawingArea->qLock.unlock();
 }
 
 //override mouse events here to implement the drawing with mouse

@@ -127,7 +127,6 @@ void DrawingCmd::receive(){
         readData(y_coordinate);
         break;
     }
-
 }
 
 void DrawingCmd::send(){
