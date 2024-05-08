@@ -22,25 +22,34 @@ void Receiver::readData(){
 
 void Receiver::addCmd(DrawingCmd cmd){
     DrawingCmd temp;
+    int16_t x, y;
     drawingArea->qLock.lock();
     receivedCommands.enqueue(cmd);
     drawingArea->qLock.unlock();
     //this function checks teh command value and calls the appropriate function basd on this
     //with the appropriate variables
+
     if(!receivedCommands.empty()){
         temp = receivedCommands.dequeue();
+        // minus that number to remove the msb and get the actual value
+        //so if the value is positive it stays +ve if its -ve it will be -ve here
+        x = temp.getX() - 32768;
+        y = temp.getY() - 32768;
         switch (temp.getCmd()) {
         case CLEAR:
             drawingArea->clear();
             break;
         case PEN_UP:
-            drawingArea->penUp(QPoint(temp.getX(), temp.getY()));
+            qDebug() << "\t\t\t" << x << " " << y;
+            drawingArea->penUp(QPoint(x, y));
             break;
         case PEN_DOWN:
-            drawingArea->penDown(QPoint(temp.getX(), temp.getY()));
+            qDebug() << "\t\t\t" << x << " " << y;
+            drawingArea->penDown(QPoint(x, y));
             break;
         case ADD_POINT:
-            drawingArea->addPoint(QPoint(temp.getX(), temp.getY()));
+            qDebug() << "\t\t\t" << x << " " << y;
+            drawingArea->addPoint(QPoint(x, y));
             break;
         case CHANGE_PEN_WIDTH:
             drawingArea->setPenSize(temp.getPenWidth());

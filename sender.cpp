@@ -13,14 +13,15 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 //function tht takes the command and the point ad sets the commands and enqueue it to the queue
 //this is made possible since they all send x and y coordinates but only the command is different
 void Sender::sendCmd(int cmd, QPoint point) {
-    if ((point.x() <= width() && point.x() >= 0) && (point.y() <= height() && point.y() >= 0)) {
-        drawingData.setCmd(cmd);
-        drawingData.setXCoordinate(point.x());
-        drawingData.setYCoordinate(point.y());
-        drawingArea->qLock.lock();
-        sendCommands.enqueue(drawingData);
-        drawingArea->qLock.unlock();
-    }
+    drawingData.setCmd(cmd);
+    qDebug() << "Actual point " << point;
+    //always set the msb 16th bit to 1 to handle both -ve and +ve coordinates
+    drawingData.setXCoordinate(point.x()+32768);
+    drawingData.setYCoordinate(point.y()+32768);
+    qDebug() << "\tSent point " << drawingData.getX() << " " << drawingData.getY();
+    drawingArea->qLock.lock();
+    sendCommands.enqueue(drawingData);
+    drawingArea->qLock.unlock();
 }
 
 //override mouse events here to implement the drawing with mouse
