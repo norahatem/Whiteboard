@@ -1,13 +1,11 @@
 #include "sender.h"
-#include <QMenu>
-#include <QMenuBar>
 
 Sender::Sender(QWidget *parent) : QMainWindow(parent)
 {
     setMinimumSize(400,400);
     resize(400,400);
     setWindowTitle("Sender");
-    drawingArea = new Whiteboard("Sender", this);
+    drawingArea = new Whiteboard(this);
     setCentralWidget(drawingArea);
     senderThread = std::thread(&Sender::serialize, this);
 }

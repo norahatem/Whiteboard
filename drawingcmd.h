@@ -38,13 +38,13 @@ public:
     void setXCoordinate(std::bitset<16> xCoordinate);
     void setYCoordinate(std::bitset<16> yCoordinate);
 
-    std::bitset<8> getCmd();
-    std::bitset<16> getX();
-    std::bitset<16> getY();
+    int getCmd();
+    int getX();
+    int getY();
 
-    std::bitset<8> getRed();
-    std::bitset<8> getGreen();
-    std::bitset<8> getBlue();
+    int getRed();
+    int getGreen();
+    int getBlue();
 
     void setRed(int r);
     void setGreen(int g);

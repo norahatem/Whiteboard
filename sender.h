@@ -4,8 +4,9 @@
 #include <QList>
 #include <QMainWindow>
 
+#include <QMenu>
+#include <QMenuBar>
 
-#include <queue>
 #include <thread>
 
 #include "whiteboard.h"
@@ -15,7 +16,7 @@ using namespace std;
 using namespace std::literals::chrono_literals;
 class Sender: public QMainWindow
 {
-     Q_OBJECT
+    Q_OBJECT
 public:
     Sender(QWidget *parent = 0);
     Whiteboard *drawingArea;

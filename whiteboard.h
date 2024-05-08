@@ -16,19 +16,20 @@
 #include <thread>
 #include <iostream>
 using namespace std::literals::chrono_literals;
+
 class Whiteboard: public QWidget
 {
 
 public:
-    explicit Whiteboard(QString name, QWidget *parent = nullptr);
+    explicit Whiteboard(QWidget *parent = nullptr);
     QMutex qLock;
     void setPenColor(QColor newColor);
     void setPenSize(int newSize);
 
-    // getter methods
     bool getIsModified() const;
     QColor getPenColor() const;
-    double getPenWidth() const;
+    int getPenWidth() const;
+
     void addPoint(QPoint point);
     void penUp(QPoint point);
     void penDown(QPoint point);
@@ -45,7 +46,7 @@ private:
     // bool drawing;
     bool isModified;
     QPoint lastPoint;
-    void paint(QPoint point);
+    void paint();
     // off class image to handle drawing
     QPixmap image;
     // QVector<QPoint> points;
@@ -55,17 +56,7 @@ private:
     QPen pen = QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     std::thread paintThread;
     QString boardName;
-    void painting(){
-        while (true) {
-            if(!points.empty()){
-                qLock.lock();
-                update();
-                qLock.unlock();
-
-            }
-            std::this_thread::sleep_for(50ms);
-        }
-    }
+    void painting();
 };
 
 #endif // WHITEBOARD_H

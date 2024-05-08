@@ -2,7 +2,7 @@
 #include <QDebug>
 
 
-Whiteboard::Whiteboard(QString name, QWidget *parent)
+Whiteboard::Whiteboard(QWidget *parent)
     : QWidget(parent)
 {
     setAttribute(Qt::WA_StaticContents);
@@ -10,7 +10,6 @@ Whiteboard::Whiteboard(QString name, QWidget *parent)
     image = QPixmap(size());
     image.fill(Qt::white);
     paintThread = std::thread(&Whiteboard::painting, this);
-    boardName = name;
 }
 
 void Whiteboard::setPenColor(QColor newPenColor){
@@ -36,12 +35,20 @@ bool Whiteboard::getIsModified() const{
     return isModified;
 }
 
-double Whiteboard::getPenWidth() const{
+int Whiteboard::getPenWidth() const{
     return penWidth;
 }
 
 void Whiteboard::paintEvent(QPaintEvent *event){
+    paint();
 
+    QPainter painter(this);
+    QRect redrawRect = event->rect();
+    painter.drawPixmap(redrawRect, image, redrawRect);
+    painter.end();
+}
+
+void Whiteboard::paint(){
     QPainter imgPainter(&image);
     while(!points.empty()){
             qLock.lock();
@@ -53,31 +60,21 @@ void Whiteboard::paintEvent(QPaintEvent *event){
             else
                 imgPainter.drawLine(lastPoint, point);
             lastPoint=point;
-
-
         }
-        imgPainter.end();
-
-
-
-    QPainter painter(this);
-    QRect redrawRect = event->rect();
-    painter.drawPixmap(redrawRect, image, redrawRect);
-    painter.end();
-}
-
-void Whiteboard::paint(QPoint point){
+    imgPainter.end();
 }
 
 void Whiteboard::resizeEvent(QResizeEvent *event){
-    QPixmap newImage(size());
-    newImage.fill(Qt::white);
-
-    // Copy the existing content from the old pixmap to the new pixmap
-    QPainter painter(&newImage);
-    painter.drawPixmap(0, 0, image);
-    image = newImage;
-    painter.end();
+    if (event->size().width() > image.width() || event->size().height() > image.height()) {
+        // If the new size is larger, create a new pixmap and copy existing content
+        QPixmap newImage(event->size());
+        newImage.fill(Qt::white);
+        QPainter painter(&newImage);
+        painter.drawPixmap(0, 0, image);
+        painter.end();
+        // Update the image with the new pixmap
+        image = newImage;
+    }
 
     QWidget::resizeEvent(event);
 }
@@ -95,4 +92,15 @@ void Whiteboard::penUp(QPoint point){
 void Whiteboard::penDown(QPoint point){
     lastPoint = point;
     this->addPoint(lastPoint);
+}
+
+void Whiteboard::painting(){
+    while (true) {
+        if(!points.empty()){
+            qLock.lock();
+            update();
+            qLock.unlock();
+        }
+        std::this_thread::sleep_for(50ms);
+    }
 }

@@ -14,24 +14,24 @@ void DrawingCmd::setXCoordinate(std::bitset<16> xCoordinate){
 void DrawingCmd::setYCoordinate(std::bitset<16> yCoordinate){
     y_coordinate = yCoordinate;
 }
-std::bitset<8> DrawingCmd::getCmd(){
-    return cmd;
+int DrawingCmd::getCmd(){
+    return (int)cmd.to_ulong();
 }
-std::bitset<16> DrawingCmd::getX(){
-    return x_coordinate;
+int DrawingCmd::getX(){
+    return (int)x_coordinate.to_ulong();
 }
-std::bitset<16> DrawingCmd::getY(){
-    return y_coordinate;
+int DrawingCmd::getY(){
+    return (int)y_coordinate.to_ulong();
 }
 
-std::bitset<8> DrawingCmd::getRed(){
-    return red;
+int DrawingCmd::getRed(){
+    return (int)red.to_ulong();
 }
-std::bitset<8> DrawingCmd::getGreen(){
-    return green;
+int DrawingCmd::getGreen(){
+    return (int)green.to_ulong();
 }
-std::bitset<8> DrawingCmd::getBlue(){
-    return blue;
+int DrawingCmd::getBlue(){
+    return (int)blue.to_ulong();
 }
 
 void DrawingCmd::setRed(int r){

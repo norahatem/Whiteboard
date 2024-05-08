@@ -6,7 +6,6 @@
 #include <QQueue>
 #include <QPoint>
 #include <ctime>
-#include <queue>
 
 #include "whiteboard.h"
 #include "drawingcmd.h"
