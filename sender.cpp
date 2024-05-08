@@ -15,18 +15,10 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 void Sender::sendCmd(int cmd, QPoint point) {
     drawingData.setCmd(cmd);
     qDebug() << "Actual point " << point;
-    if ((point.x() >= 0) && (point.y() >= 0)) {
-        drawingData.setXCoordinate(point.x());
-        drawingData.setYCoordinate(point.y());
-
-    }else{
-        if(point.x() < 0){
-            drawingData.setXCoordinate((-1*point.x()+32768));
-        }
-        if(point.y() < 0)
-            drawingData.setYCoordinate((-1*point.y()+32768));
-    }
-    qDebug() << "\t Sent point" << drawingData.getX() << " " << drawingData.getY();
+    //always set the msb 16th bit to 1 to handle both -ve and +ve coordinates
+    drawingData.setXCoordinate(point.x()+32768);
+    drawingData.setYCoordinate(point.y()+32768);
+    qDebug() << "\tSent point " << drawingData.getX() << " " << drawingData.getY();
     drawingArea->qLock.lock();
     sendCommands.enqueue(drawingData);
     drawingArea->qLock.unlock();

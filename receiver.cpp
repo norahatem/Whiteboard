@@ -31,8 +31,10 @@ void Receiver::addCmd(DrawingCmd cmd){
 
     if(!receivedCommands.empty()){
         temp = receivedCommands.dequeue();
-        x = temp.getX();
-        y = temp.getY();
+        // minus that number to remove the msb and get the actual value
+        //so if the value is positive it stays +ve if its -ve it will be -ve here
+        x = temp.getX() - 32768;
+        y = temp.getY() - 32768;
         switch (temp.getCmd()) {
         case CLEAR:
             drawingArea->clear();
@@ -46,14 +48,6 @@ void Receiver::addCmd(DrawingCmd cmd){
             drawingArea->penDown(QPoint(x, y));
             break;
         case ADD_POINT:
-            if(y >=32768){
-                qDebug() << y << " A negative y";
-                y = (32768 - y);
-            }
-            if(x >=32768){
-                qDebug() << x << " A negative x";
-                x = (32768 - x);
-            }
             qDebug() << "\t\t\t" << x << " " << y;
             drawingArea->addPoint(QPoint(x, y));
             break;
