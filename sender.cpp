@@ -13,9 +13,15 @@ Sender::Sender(QWidget *parent) : QMainWindow(parent)
 void Sender::mousePressEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         drawingArea->penDown(event->pos());
-        drawingData.setCmd(PEN_DOWN);
-        drawingData.setXCoordinate(event->pos().x());
-        drawingData.setYCoordinate(event->pos().y());
+        sendCmd(PEN_DOWN, event->pos());
+    }
+}
+
+void Sender::sendCmd(std::bitset<8> cmd, QPoint point) {
+    if ((point.x() <= width() && point.x() >= 0) && (point.y() <= height() && point.y() >= 0)) {
+        drawingData.setCmd(cmd);
+        drawingData.setXCoordinate(point.x());
+        drawingData.setYCoordinate(point.y());
         drawingArea->qLock.lock();
         sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
@@ -25,25 +31,14 @@ void Sender::mousePressEvent(QMouseEvent *event){
 void Sender::mouseMoveEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton){
         drawingArea->addPoint(event->pos());
-        drawingData.setCmd(ADD_POINT);
-        drawingData.setXCoordinate(event->pos().x());
-        drawingData.setYCoordinate(event->pos().y());
-        drawingArea->qLock.lock();
-        sendCommands.enqueue(drawingData);
-        drawingArea->qLock.unlock();
+        sendCmd(ADD_POINT, event->pos());
     }
 }
 
 void Sender::mouseReleaseEvent(QMouseEvent *event){
-
     if(event->button() == Qt::LeftButton){
         drawingArea->penUp(event->pos());
-        drawingData.setCmd(PEN_UP);
-        drawingData.setXCoordinate(event->pos().x());
-        drawingData.setYCoordinate(event->pos().y());
-        drawingArea->qLock.lock();
-        sendCommands.enqueue(drawingData);
-        drawingArea->qLock.unlock();
+        sendCmd(PEN_UP, event->pos());
     }
 }
 

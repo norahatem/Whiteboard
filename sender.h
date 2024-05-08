@@ -20,6 +20,7 @@ class Sender: public QMainWindow
 public:
     Sender(QWidget *parent = 0);
     Whiteboard *drawingArea;
+    void sendCmd(std::bitset<8> cmd, QPoint point);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
