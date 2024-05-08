@@ -11,8 +11,11 @@ Receiver::Receiver(QWidget *parent) : QMainWindow(parent)
 }
 
 void Receiver::readData(){
+    //thread function to raed th drawing commands
     while(true){
+        //drawing command method
         cmd.receive();
+        //call add command function
         addCmd(cmd);
     }
 }
@@ -22,6 +25,8 @@ void Receiver::addCmd(DrawingCmd cmd){
     drawingArea->qLock.lock();
     receivedCommands.enqueue(cmd);
     drawingArea->qLock.unlock();
+    //this function checks teh command value and calls the appropriate function basd on this
+    //with the appropriate variables
     if(!receivedCommands.empty()){
         temp = receivedCommands.dequeue();
         switch (temp.getCmd()) {

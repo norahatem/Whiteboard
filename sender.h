@@ -2,6 +2,10 @@
 #define SENDER_H
 #include <QMouseEvent>
 #include <QList>
+//this class represents the sender
+//it also initializes a whiteboard and ovverrides the mouse events to implement the drawing on the board
+//it also has a sender thread that collect the data and send them to the GPIO pins
+
 #include <QMainWindow>
 
 #include <QMenu>
@@ -20,7 +24,6 @@ class Sender: public QMainWindow
 public:
     Sender(QWidget *parent = 0);
     Whiteboard *drawingArea;
-    void sendCmd(std::bitset<8> cmd, QPoint point);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -37,6 +40,7 @@ private:
     std::thread senderThread;
     void serialize();
     DrawingCmd cmd;
+    void sendCmd(int cmd, QPoint point);
 };
 
 #endif // SENDER_H

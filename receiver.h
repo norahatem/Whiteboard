@@ -1,3 +1,7 @@
+//This class represents the receiver window
+//it has a receiver thread that keeps reeding from the gpio pins
+//and sends them to the whiteboard/ calls the respective whiteboard function based on the received data to be displayed
+
 #ifndef RECEIVER_H
 #define RECEIVER_H
 

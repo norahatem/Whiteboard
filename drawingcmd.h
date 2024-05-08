@@ -1,3 +1,19 @@
+//A class to implement the differnt drawing commands
+//it can implement up to 256 command
+// 65536 x values and y values
+//3 bytes for pen coloue
+//and up to 256 values for line width
+//it has got setter and getter methods for each variable
+//and the sending and receiving methods for sending and receiving data over the GPIO pins
+//the send function when clled it sends the command
+//the receive function when called sets the command values
+//how to use it
+//set the command and the respective data
+//use the sen on the drawingCmd variable to send it
+//on the other side declare a variable of the type drawingCmd and use the receive methd
+//you can similarly use the getter methods to get a specific value
+//you must notice that values that haven't been initialized will contain trash values so make sure to use the righ data
+
 #ifndef DRAWINGCMD_H
 #define DRAWINGCMD_H
 
@@ -56,14 +72,6 @@ public:
     void send();
     void receive();
 
-    template <size_t N, size_t... Sizes>
-    std::bitset<N> concat(const std::bitset<Sizes>&... bitsets);
-
-    template<size_t N>
-    void readData(std::bitset<N>& data);
-
-    template<size_t N>
-    void sendData(std::bitset<N>& sendData);
 
 private:
     std::bitset<8> cmd;
@@ -75,6 +83,15 @@ private:
     std::bitset<8> blue;
 
     std::bitset<8> penWidth;
+
+    template <size_t N, size_t... Sizes>
+    std::bitset<N> concat(const std::bitset<Sizes>&... bitsets);
+
+    template<size_t N>
+    void readData(std::bitset<N>& data);
+
+    template<size_t N>
+    void sendData(std::bitset<N>& sendData);
 };
 
 #endif // DRAWINGCMD_H

@@ -9,7 +9,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     createAction();
     createMenu();
 
+    //set stylesheet for QLabel
     QString stylesheet = "QLabel { background-color : none; color : black; font-size: 11pt;}";
+    //add two labels indicating which one is the send/local and which one is the receive/remote
     send = new QLabel("Local", this);
     receive = new QLabel("Remote", this);
     send->setAlignment(Qt::AlignCenter);
@@ -17,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     send->setStyleSheet(stylesheet);
     receive->setStyleSheet(stylesheet);
 
+    //two vertical boxe to contain the sender window and its label and the receiver window and its label
     QVBoxLayout *receiverLayout = new QVBoxLayout;
     receiverLayout->addWidget(receive);
     receiverLayout->addWidget(receiver);
@@ -25,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     senderLayout->addWidget(send);
     senderLayout->addWidget(sender);
 
-
+//    horizontal box to add both vertical boxes in it
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addLayout(senderLayout);
@@ -45,6 +48,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::createAction(){
+    //function to create the actions that are to be added to the menu
     clearScreen = new QAction(tr("&Clear"), this);
     connect(clearScreen, &QAction::triggered, sender, &Sender::clearBoard);
 
@@ -56,6 +60,7 @@ void MainWindow::createAction(){
 }
 
 void MainWindow::createMenu(){
+    //function to create the menu bar
     options = new QMenu(tr("&Options"), this);
     options->addAction(clearScreen);
     options->addAction(changeColor);
@@ -65,6 +70,7 @@ void MainWindow::createMenu(){
 
 
 void MainWindow::changePenColor(){
+    //change pen color to be triggered when the change color action is triggered
     QColor newColor = QColorDialog::getColor(sender->drawingArea->getPenColor());
     if(newColor.isValid()){
         sender->ChangePenColor(newColor.name());
@@ -72,10 +78,12 @@ void MainWindow::changePenColor(){
 }
 
 void MainWindow::changePenWidth(){
+    //function to change pen width
+    //called when the pen width action is triggereed
     bool ok;
     int newWidth = QInputDialog::getInt(this, tr("Whiteboard"), tr("Select pen width:"),
-                                        sender->drawingArea->getPenWidth(),
-                                        1,50,1,&ok);
+        sender->drawingArea->getPenWidth(),
+        1,50,1,&ok);
     if(ok)
         sender->changePenWidth(newWidth);
 }

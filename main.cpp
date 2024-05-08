@@ -7,6 +7,7 @@
 #include "drawingcmd.h"
 
 void initRpi(){
+    //set up the rpi GPIO pins to be used
     wiringPiSetup();
     pinMode(clkM,OUTPUT);
     pinMode(clkS,INPUT);

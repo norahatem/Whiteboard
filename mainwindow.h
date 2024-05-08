@@ -1,3 +1,8 @@
+//this main wincdow is to represent the main indow that shows both sender and receiver windows in one window
+//this is an attempt to ic the problem that only the fisrt window shown takes all the functionalities of a window
+//it also shows the menu bar that allows you to clear/change pen color and chnage pen width
+//how to use it, only decalre it in the main and call the show function
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
