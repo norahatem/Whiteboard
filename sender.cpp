@@ -1,55 +1,54 @@
 #include "sender.h"
-#include <QMenu>
-#include <QMenuBar>
 
 Sender::Sender(QWidget *parent) : QMainWindow(parent)
 {
     setMinimumSize(400,400);
     resize(400,400);
     setWindowTitle("Sender");
-    drawingArea = new Whiteboard("Sender", this);
+    drawingArea = new Whiteboard(this);
     setCentralWidget(drawingArea);
     senderThread = std::thread(&Sender::serialize, this);
 }
 
-void Sender::mousePressEvent(QMouseEvent *event){
-    if(event->button() == Qt::LeftButton){
-        drawingArea->penDown(event->pos());
-        drawingData.setCmd(PEN_DOWN);
-        drawingData.setXCoordinate(event->pos().x());
-        drawingData.setYCoordinate(event->pos().y());
+//function tht takes the command and the point ad sets the commands and enqueue it to the queue
+//this is made possible since they all send x and y coordinates but only the command is different
+void Sender::sendCmd(int cmd, QPoint point) {
+    if ((point.x() <= width() && point.x() >= 0) && (point.y() <= height() && point.y() >= 0)) {
+        drawingData.setCmd(cmd);
+        drawingData.setXCoordinate(point.x());
+        drawingData.setYCoordinate(point.y());
         drawingArea->qLock.lock();
         sendCommands.enqueue(drawingData);
         drawingArea->qLock.unlock();
     }
 }
+
+//override mouse events here to implement the drawing with mouse
+
+void Sender::mousePressEvent(QMouseEvent *event){
+    if(event->button() == Qt::LeftButton){
+        drawingArea->penDown(event->pos());
+        sendCmd(PEN_DOWN, event->pos());
+    }
+}
+
 
 void Sender::mouseMoveEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton){
         drawingArea->addPoint(event->pos());
-        drawingData.setCmd(ADD_POINT);
-        drawingData.setXCoordinate(event->pos().x());
-        drawingData.setYCoordinate(event->pos().y());
-        drawingArea->qLock.lock();
-        sendCommands.enqueue(drawingData);
-        drawingArea->qLock.unlock();
+        sendCmd(ADD_POINT, event->pos());
     }
 }
 
 void Sender::mouseReleaseEvent(QMouseEvent *event){
-
     if(event->button() == Qt::LeftButton){
         drawingArea->penUp(event->pos());
-        drawingData.setCmd(PEN_UP);
-        drawingData.setXCoordinate(event->pos().x());
-        drawingData.setYCoordinate(event->pos().y());
-        drawingArea->qLock.lock();
-        sendCommands.enqueue(drawingData);
-        drawingArea->qLock.unlock();
+        sendCmd(PEN_UP, event->pos());
     }
 }
 
 void Sender::clearBoard(){
+    //clears its board and sets the command to be sent
     drawingArea->clear();
     drawingData.setCmd(CLEAR);
     drawingArea->qLock.lock();
@@ -58,6 +57,7 @@ void Sender::clearBoard(){
 }
 
 void Sender::ChangePenColor(QColor newPenColor){
+    //set the pen colour and set the drawing command to be sent
     drawingArea->setPenColor(newPenColor);
     drawingData.setCmd(CHANGE_PEN_COLOR);
     drawingData.setRed(newPenColor.red());
@@ -69,7 +69,9 @@ void Sender::ChangePenColor(QColor newPenColor){
 }
 
 void Sender::changePenWidth(int newPenWidth){
+    //set the pen size for its drawing board
     drawingArea->setPenSize(newPenWidth);
+    //set the drawing command to be sent to the receiver and adds it to the queue
     drawingData.setCmd(CHANGE_PEN_WIDTH);
     drawingData.setPenWidth(newPenWidth);
     drawingArea->qLock.lock();
@@ -78,11 +80,13 @@ void Sender::changePenWidth(int newPenWidth){
 }
 
 void Sender::serialize(){
+    //thread function to send all drawing commands to GPIO pins
     while (true) {
         if(!sendCommands.empty()){
             drawingArea->qLock.lock();
             DrawingCmd cmd = sendCommands.dequeue();
             drawingArea->qLock.unlock();
+            //drawing command method
             cmd.send();
         } else
             std::this_thread::sleep_for(100ms);

@@ -1,3 +1,9 @@
+//this is the class that represents the whiteboard
+//it receives points from any source using the commands penUp penDown addPoint
+//and draws the points based on this
+//it also has setter and getter methods for the member variables like the color and width
+//these are used to implement different and more commands like changing with and color
+
 #ifndef WHITEBOARD_H
 #define WHITEBOARD_H
 
@@ -15,20 +21,21 @@
 
 #include <thread>
 #include <iostream>
+
 using namespace std::literals::chrono_literals;
+
 class Whiteboard: public QWidget
 {
 
 public:
-    explicit Whiteboard(QString name, QWidget *parent = nullptr);
+    explicit Whiteboard(QWidget *parent = nullptr);
     QMutex qLock;
     void setPenColor(QColor newColor);
     void setPenSize(int newSize);
 
-    // getter methods
-    bool getIsModified() const;
     QColor getPenColor() const;
-    double getPenWidth() const;
+    int getPenWidth() const;
+
     void addPoint(QPoint point);
     void penUp(QPoint point);
     void penDown(QPoint point);
@@ -37,35 +44,23 @@ public slots:
     void clear();
 
 protected:
-    // paint event
     void paintEvent(QPaintEvent *event)override;
     void resizeEvent(QResizeEvent *event)override;
 
 private:
-    // bool drawing;
-    bool isModified;
     QPoint lastPoint;
-    void paint(QPoint point);
+    void paint();
     // off class image to handle drawing
     QPixmap image;
-    // QVector<QPoint> points;
+    //initialize the values of color and pen width
     QColor penColor = "Black";
     int penWidth = 3;
+    //points to be drawn
     QQueue<QPoint> points;
     QPen pen = QPen(penColor, penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     std::thread paintThread;
-    QString boardName;
-    void painting(){
-        while (true) {
-            if(!points.empty()){
-                qLock.lock();
-                update();
-                qLock.unlock();
-
-            }
-            std::this_thread::sleep_for(50ms);
-        }
-    }
+//    QString boardName;
+    void painting();
 };
 
 #endif // WHITEBOARD_H
