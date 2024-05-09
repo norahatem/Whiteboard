@@ -40,15 +40,15 @@ void Receiver::addCmd(DrawingCmd cmd){
             drawingArea->clear();
             break;
         case PEN_UP:
-            qDebug() << "\t\t\t" << x << " " << y;
+//            qDebug() << "\t\t\t" << x << " " << y;
             drawingArea->penUp(QPoint(x, y));
             break;
         case PEN_DOWN:
-            qDebug() << "\t\t\t" << x << " " << y;
+//            qDebug() << "\t\t\t" << x << " " << y;
             drawingArea->penDown(QPoint(x, y));
             break;
         case ADD_POINT:
-            qDebug() << "\t\t\t" << x << " " << y;
+//            qDebug() << "\t\t\t" << x << " " << y;
             drawingArea->addPoint(QPoint(x, y));
             break;
         case CHANGE_PEN_WIDTH:
